@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { GetPassModule } from './getPass/get-pass/get-pass.module';
-import { UserRoles } from './getPass/get-pass/user_roles.model';
+import { GetPassModule } from './getPass/get-pass.module';
+import { UserRoles } from './getPass/user_roles.model';
 import { User } from './getPass/user.model';
 import { Role } from './roles/roles/roles.model';
 import { RolesModule } from './roles/roles/roles.module';
+import { AuthModule } from './auth/auth.module';
+
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { RolesModule } from './roles/roles/roles.module';
     }),
     GetPassModule,
     RolesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

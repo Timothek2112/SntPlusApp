@@ -1,6 +1,6 @@
 import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
 import { Role } from 'src/roles/roles/roles.model';
-import { UserRoles } from './get-pass/user_roles.model';
+import { UserRoles } from './user_roles.model';
 
 interface UserCreationAttrs{
   login: string;
