@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { GetPassModule } from 'src/getPass/get-pass.module';
@@ -18,7 +18,8 @@ import { GetPassService } from 'src/getPass/get-pass.service';
       secret: process.env.PRIVATE_KEY || 'SECRET',
       signOptions: { expiresIn: '24h' },
     }),
-    GetPassModule,
+    forwardRef(() => GetPassModule),
   ],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
