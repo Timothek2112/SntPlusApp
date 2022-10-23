@@ -7,6 +7,8 @@ import { User } from './getPass/user.model';
 import { Role } from './roles/roles/roles.model';
 import { RolesModule } from './roles/roles/roles.module';
 import { AuthModule } from './auth/auth.module';
+import { Pokazania } from './pokazania/pokazania.model';
+import { PokazaniaUser } from './pokazania/Pokazania_User.model';
 
 
 @Module({
@@ -21,7 +23,7 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.POSTGRES_USER,
       password: String(process.env.POSTGRES_PASSWORD),
       database: process.env.POSTGRES_DB,
-      models: [User, Role, UserRoles],
+      models: [User, Role, UserRoles, Pokazania, PokazaniaUser],
       autoLoadModels: true,
       dialectOptions: {},
     }),
