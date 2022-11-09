@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   BelongsToMany,
   Column,
@@ -9,10 +10,11 @@ import {
 import { Role } from 'src/roles/roles/roles.model';
 import { User } from './user.model';
 
-
-
 @Table({ tableName: 'user_roles', createdAt: false, updatedAt: false })
 export class UserRoles extends Model<UserRoles> {
+  @ApiProperty({
+    description: 'Присваевается автоматически, уникальный идентификатор роли',
+  })
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -20,13 +22,12 @@ export class UserRoles extends Model<UserRoles> {
     primaryKey: true,
   })
   id: number;
-  
+
   @ForeignKey(() => Role)
-  @Column({ type: DataType.INTEGER})
+  @Column({ type: DataType.INTEGER })
   roleId: number;
 
   @ForeignKey(() => User)
-  @Column({ type: DataType.INTEGER})
+  @Column({ type: DataType.INTEGER })
   userId: number;
-
 }

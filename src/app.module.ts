@@ -1,3 +1,5 @@
+import { PokazaniaModule } from './pokazania/pokazania.module';
+import { PokazaniaController } from './pokazania/pokazania.controller';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -13,6 +15,7 @@ import { PokazaniaUser } from './pokazania/Pokazania_User.model';
 
 @Module({
   imports: [
+    PokazaniaModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
@@ -31,7 +34,8 @@ import { PokazaniaUser } from './pokazania/Pokazania_User.model';
     RolesModule,
     AuthModule,
   ],
-  controllers: [],
+  controllers: [
+    PokazaniaController,],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

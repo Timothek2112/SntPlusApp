@@ -10,7 +10,7 @@ export class GetPassService {
     @InjectModel(User) private userRepository: typeof User,
     private roleService: RolesService,
   ) {}
-  
+
   async createUser(dto: CreateUserDto) {
     const user = await this.userRepository.create(dto);
     const role = await this.roleService.getRole('USER');
@@ -24,9 +24,17 @@ export class GetPassService {
     return users;
   }
 
-  async getUserByLogin(login: string){
+  async getUserByLogin(login: string) {
     const user = await this.userRepository.findOne({
       where: { login },
+      include: { all: true },
+    });
+    return user;
+  }
+
+  async getUserById(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
       include: { all: true },
     });
     return user;

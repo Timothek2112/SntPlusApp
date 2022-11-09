@@ -11,6 +11,9 @@ import { PokazaniaUser } from './Pokazania_User.model';
 interface PokazaniaCreationAttr {
   water: number;
   electricity: number;
+  isNewCounter: boolean;
+  year: number;
+  month: number;
 }
 
 @Table({ tableName: 'pokazania' })
@@ -28,11 +31,11 @@ export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
   @Column({ type: DataType.INTEGER, allowNull: true })
   electricity: number;
 
-  @Column({ type: DataType.STRING })
-  month: string;
+  @Column({ type: DataType.INTEGER })
+  month: number;
 
-  @Column({ type: DataType.STRING })
-  year: string;
+  @Column({ type: DataType.INTEGER })
+  year: number;
 
   @Column({ type: DataType.BOOLEAN })
   isNewCounter: boolean;
