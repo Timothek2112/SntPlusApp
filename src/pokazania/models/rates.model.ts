@@ -14,7 +14,7 @@ export class Rates extends Model<Rates, RatesCreationAttrs> {
   water: number;
 
   @Column({ type: DataType.FLOAT })
-  elecricity: number;
+  electricity: number;
 
   @Column({ type: DataType.INTEGER })
   month: number;

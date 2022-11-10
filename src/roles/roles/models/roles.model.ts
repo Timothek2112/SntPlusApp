@@ -5,8 +5,8 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { UserRoles } from 'src/getPass/user_roles.model';
-import { User } from 'src/getPass/user.model';
+import { UserRoles } from '../../../getPass/models/user_roles.model';
+import { User } from '../../../getPass/models/user.model';
 
 interface RoleCreationAttrs {
   role: string;
@@ -21,6 +21,7 @@ export class Role extends Model<Role, RoleCreationAttrs> {
     primaryKey: true,
   })
   id: number;
+
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   role: string;
 

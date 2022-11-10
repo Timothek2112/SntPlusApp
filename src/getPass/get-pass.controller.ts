@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { User } from './user.model';
+import { User } from './models/user.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetPassService } from './get-pass.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('/get-pass')
 export class GetPassController {

@@ -1,12 +1,12 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Role } from 'src/roles/roles/roles.model';
-import { RolesModule } from 'src/roles/roles/roles.module';
-import { User } from './user.model';
+import { Role } from '../roles/roles/models/roles.model';
+import { RolesModule } from '../roles/roles/roles.module';
+import { User } from './models/user.model';
 import { GetPassController } from './get-pass.controller';
 import { GetPassService } from './get-pass.service';
-import { UserRoles } from './user_roles.model';
-import { AuthModule } from 'src/auth/auth.module';
+import { UserRoles } from './models/user_roles.model';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   controllers: [GetPassController],

@@ -5,12 +5,13 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { User } from 'src/getPass/user.model';
+import { User } from '../../getPass/models/user.model';
 import { PokazaniaUser } from './Pokazania_User.model';
 
 interface PokazaniaCreationAttr {
   water: number;
   electricity: number;
+  membership: number;
   isNewCounter: boolean;
   year: number;
   month: number;
@@ -25,11 +26,14 @@ export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
     primaryKey: true,
   })
   id: number;
-  @Column({ type: DataType.INTEGER, allowNull: true })
+  @Column({ type: DataType.FLOAT, allowNull: true })
   water: number;
 
-  @Column({ type: DataType.INTEGER, allowNull: true })
+  @Column({ type: DataType.FLOAT, allowNull: true })
   electricity: number;
+
+  @Column({ type: DataType.FLOAT, allowNull: true })
+  membership: number;
 
   @Column({ type: DataType.INTEGER })
   month: number;

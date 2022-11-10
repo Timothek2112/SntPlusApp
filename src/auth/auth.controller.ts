@@ -8,8 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiDefaultResponse, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from 'src/getPass/dto/create-user.dto';
-import { GetUserDto } from 'src/getPass/dto/get-user.dto';
+import { CreateUserDto } from '../getPass/dto/create-user.dto';
+import { GetUserDto } from '../getPass/dto/get-user.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 

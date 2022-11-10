@@ -1,5 +1,11 @@
-import { Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { User } from 'src/getPass/user.model';
+import {
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { User } from '../../getPass/models/user.model';
 import { Pokazania } from './pokazania.model';
 
 interface Pokazania_UserCreationArttrs {
@@ -19,6 +25,4 @@ export class PokazaniaUser extends Model<
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER })
   userId: number;
-
-  
 }

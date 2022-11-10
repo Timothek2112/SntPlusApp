@@ -7,14 +7,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/getPass/dto/create-user.dto';
-import { User } from 'src/getPass/user.model';
+import { CreateUserDto } from '../getPass/dto/create-user.dto';
+import { User } from '../getPass/models/user.model';
 import { GetPassService } from '../getPass/get-pass.service';
 import * as bcrypt from 'bcrypt';
-import { getSystemErrorMap } from 'util';
-import { Console } from 'console';
-import { resourceLimits } from 'worker_threads';
-import { GetUserDto } from 'src/getPass/dto/get-user.dto';
+
 @Injectable()
 export class AuthService {
   constructor(

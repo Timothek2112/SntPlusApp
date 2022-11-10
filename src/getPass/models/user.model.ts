@@ -6,9 +6,13 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Pokazania } from 'src/pokazania/pokazania.model';
-import { PokazaniaUser } from 'src/pokazania/Pokazania_User.model';
-import { Role } from 'src/roles/roles/roles.model';
+import { Debts } from 'src/pokazania/models/debts.model';
+import { DebtsUser } from 'src/pokazania/models/Debts_User.model';
+import { Payment } from 'src/pokazania/models/payments.model';
+import { PaymentsUser } from 'src/pokazania/models/Payments_User.model';
+import { Pokazania } from '../../pokazania/models/pokazania.model';
+import { PokazaniaUser } from '../../pokazania/models/Pokazania_User.model';
+import { Role } from '../../roles/roles/models/roles.model';
 import { UserRoles } from './user_roles.model';
 
 interface UserCreationAttrs {
@@ -71,4 +75,10 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @BelongsToMany(() => Pokazania, () => PokazaniaUser)
   pokazania: Pokazania[];
+
+  @BelongsToMany(() => Debts, () => DebtsUser)
+  debts: Debts[];
+
+  @BelongsToMany(() => Payment, () => PaymentsUser)
+  payments: Payment[];
 }
