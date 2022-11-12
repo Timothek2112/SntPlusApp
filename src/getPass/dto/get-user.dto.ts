@@ -1,3 +1,3 @@
 export class GetUserDto {
-  readonly userid: number;
+  userid: number;
 }

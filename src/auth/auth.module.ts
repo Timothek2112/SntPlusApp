@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { GetPassModule } from '../getPass/get-pass.module';
 import { JwtModule } from '@nestjs/jwt';
-import { GetPassService } from '../getPass/get-pass.service';
 
 @Module({
   providers: [AuthService],

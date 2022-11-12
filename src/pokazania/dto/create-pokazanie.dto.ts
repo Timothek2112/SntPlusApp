@@ -1,9 +1,10 @@
 export class CreatePokazanieDto {
-  readonly userid: number;
-  readonly water: number;
-  readonly electricity: number;
-  readonly membership: number;
-  readonly month: number;
-  readonly year: number;
-  readonly isNewCounter: boolean;
+  userid: number;
+  water: number;
+  electricity: number;
+  membership: number;
+  penality: number;
+  month: number;
+  year: number;
+  isNewCounter: boolean;
 }

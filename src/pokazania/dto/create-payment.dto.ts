@@ -2,6 +2,7 @@ export class CreatePaymentDto {
   water: number;
   electricity: number;
   month: number;
+  year: number;
   membership: number;
   penality: number;
   userId: number;

@@ -22,6 +22,10 @@ export class DebtService {
     @InjectModel(Debts) private debtRepository: typeof Debts,
   ) {}
 
+  //TODO: Изменить функцию returnDebt, убрав использование
+  //функции calculateNewDebt, вместо этого добавить использование
+  //функции calculateNewDebt при добавлении новых показаний и оплат
+
   async createRate(dto: CreateRateDto) {
     let rate = null;
     const month = dto.month;
@@ -46,7 +50,7 @@ export class DebtService {
         where: { id: dto.userid },
         include: { all: true },
       });
-      console.log(user);
+
       const debt = user.debts[user.debts.length - 1];
       return debt;
     } else {
@@ -61,21 +65,24 @@ export class DebtService {
     });
 
     const lastActualPokazanieId = user.pokazania[user.pokazania.length - 1].id;
-    const lastPokazanie = this.findPokazaniaInDebts(
+    const lastActualPaymentId = user.payments[user.payments.length - 1].id;
+    const lastPokazanie = await this.findPokazaniaInDebts(
       user.debts,
       lastActualPokazanieId,
     );
+    const lastPayment = await this.findPaymentsInDebts(
+      user.debts,
+      lastActualPaymentId,
+    );
 
-    console.log(lastPokazanie);
-    if (lastPokazanie != null) {
+    if (lastPokazanie && lastPayment) {
       return true;
     } else {
-      console.log('false');
       return false;
     }
   }
 
-  findPokazaniaInDebts(arr: Debts[], target: number) {
+  async findPokazaniaInDebts(arr: Debts[], target: number) {
     for (let i = 0; i < arr.length; i++) {
       if (arr[i].lastPokazanieId == target) {
         return arr[i];
@@ -84,7 +91,16 @@ export class DebtService {
     return null;
   }
 
-  async calculateNewDebt(dto: GetUserDto) {
+  async findPaymentsInDebts(arr: Debts[], target: number) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].lastPaymentId == target) {
+        return arr[i];
+      }
+    }
+    return null;
+  }
+
+  public async calculateNewDebt(dto: GetUserDto) {
     const user = await this.userRepository.findOne({
       where: { id: dto.userid },
       include: { all: true },
@@ -93,6 +109,10 @@ export class DebtService {
     const payments = this.calculatePaymentSum(user);
     const calculatedDebt: DebtDto = await this.calculateDebts(user);
     calculatedDebt.applyPayment(payments);
+
+    calculatedDebt.lastPaymentId = user.payments[user.payments.length - 1].id;
+    calculatedDebt.lastPokazanieId =
+      user.pokazania[user.pokazania.length - 1].id;
 
     const newDebt = await this.debtRepository.create(calculatedDebt);
     await user.$add('debts', [newDebt.id]);
@@ -104,11 +124,6 @@ export class DebtService {
   calculatePaymentSum(user: User) {
     const payments = user.payments;
     const sumPayment: CreatePaymentDto = new CreatePaymentDto();
-
-    sumPayment.water = 0;
-    sumPayment.electricity = 0;
-    sumPayment.membership = 0;
-    sumPayment.penality = 0;
 
     for (let i = 0; i < payments.length; i++) {
       sumPayment.water += payments[i].water;
@@ -126,10 +141,14 @@ export class DebtService {
     const calculatedDebt = new DebtDto();
 
     // eslint-disable-next-line prettier/prettier
-    calculatedDebt.electricity = userPokazania[0].electricity * rate.electricity;
-    calculatedDebt.water = userPokazania[0].water * rate.water;
-    calculatedDebt.membership = userPokazania[0].membership;
-    calculatedDebt.penality = 0;
+    
+    try {
+      calculatedDebt.electricity =
+        userPokazania[0].electricity * rate.electricity;
+      calculatedDebt.water = userPokazania[0].water * rate.water;
+      calculatedDebt.membership = userPokazania[0].membership;
+      calculatedDebt.penality = userPokazania[0].penality;
+    } catch {}
 
     for (let i = 1; i < userPokazania.length; i++) {
       rate = await this.findRate(userPokazania);
@@ -141,11 +160,12 @@ export class DebtService {
       // eslint-disable-next-line prettier/prettier
       calculatedDebt.electricity += (actual.electricity - last.electricity) * rate.electricity;
       calculatedDebt.membership += actual.membership;
+      calculatedDebt.penality += actual.penality;
     }
 
-    for (let i = 0; i < user.debts.length; i++) {
-      calculatedDebt.penality += user.debts[i].penality;
-    }
+    /* for (let i = 1; i < user.debts.length; i++) {
+      calculatedDebt.penality += user.debts[i].penality - user.debts[i - 1].penality;
+    } */
 
     return calculatedDebt;
   }

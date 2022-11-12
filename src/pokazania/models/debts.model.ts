@@ -46,6 +46,9 @@ export class Debts extends Model<Debts, DebtCreationAttrs> {
   @Column({ type: DataType.INTEGER })
   lastPokazanieId: number;
 
+  @Column({ type: DataType.INTEGER })
+  lastPaymentId: number;
+
   @BelongsToMany(() => User, () => DebtsUser)
   debts: Debts[];
 }

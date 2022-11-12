@@ -10,6 +10,9 @@ import { CreatePokazanieDto } from './dto/create-pokazanie.dto';
 import { Payment } from './models/payments.model';
 import { Pokazania } from './models/pokazania.model';
 import { CreatePaymentDto } from './dto/create-payment.dto';
+import { DebtService } from './debt.service';
+import { CreateUserDto } from 'src/getPass/dto/create-user.dto';
+import { GetUserDto } from 'src/getPass/dto/get-user.dto';
 
 @Injectable()
 export class PokazaniaService {
@@ -18,16 +21,33 @@ export class PokazaniaService {
     @InjectModel(User) private userRepository: typeof User,
     @InjectModel(Payment) private paymentRepository: typeof Payment,
     private userService: GetPassService,
+    private debtService: DebtService,
   ) {}
 
   async createPokazanie(dto: CreatePokazanieDto) {
     const id = dto.userid;
     const user = await this.userService.getUserById(id);
-    const pokazanie = await this.pokazania.create(dto);
-    await user.$add('pokazania', [pokazanie.id]);
-    user.pokazania.push(pokazanie);
 
-    return pokazanie;
+    const dublicatePokazanie = await this.pokazania.findOne({
+      where: { month: dto.month, year: dto.year },
+    });
+
+    if (dublicatePokazanie) {
+      await this.pokazania.update(dto, {
+        where: { month: dto.month, year: dto.year },
+      });
+
+      const userDto: GetUserDto = new GetUserDto();
+      userDto.userid = id;
+      await this.debtService.calculateNewDebt(userDto);
+
+      return dto;
+    } else {
+      const pokazanie = await this.pokazania.create(dto);
+      await user.$add('pokazania', [pokazanie.id]);
+      user.pokazania.push(pokazanie);
+      return pokazanie;
+    }
   }
 
   async createPayment(dto: CreatePaymentDto) {
@@ -35,10 +55,25 @@ export class PokazaniaService {
       where: { id: dto.userId },
       include: { all: true },
     });
-    const payment = await this.paymentRepository.create(dto);
-    await user.$add('payments', [payment.id]);
-    user.payments.push(payment);
+    const dublicatePayment = await this.paymentRepository.findOne({
+      where: { month: dto.month, year: dto.year },
+    });
 
-    return payment;
+    if (dublicatePayment) {
+      await this.paymentRepository.update(dto, {
+        where: { month: dto.month, year: dto.year },
+      });
+
+      const userDto: GetUserDto = new GetUserDto();
+      userDto.userid = dto.userId;
+      await this.debtService.calculateNewDebt(userDto);
+
+      return dublicatePayment;
+    } else {
+      const payment = await this.paymentRepository.create(dto);
+      await user.$add('payments', [payment.id]);
+      user.payments.push(payment);
+      return payment;
+    }
   }
 }

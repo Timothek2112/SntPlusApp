@@ -9,6 +9,7 @@ export class DebtDto {
   penality: number;
   userId: number;
   lastPokazanieId: number;
+  lastPaymentId: number;
 
   applyPayment(payment: CreatePaymentDto) {
     this.water -= payment.water;

@@ -35,6 +35,9 @@ export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
   @Column({ type: DataType.FLOAT, allowNull: true })
   membership: number;
 
+  @Column({ type: DataType.FLOAT, allowNull: true })
+  penality: number;
+
   @Column({ type: DataType.INTEGER })
   month: number;
 

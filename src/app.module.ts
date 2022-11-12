@@ -1,4 +1,5 @@
-import { DebtService } from './pokazania/debt.service';
+import { ExcelModule } from './excel/excel.module';
+import { ExcelController } from './excel/excel.controller';
 import { PokazaniaModule } from './pokazania/pokazania.module';
 import { PokazaniaController } from './pokazania/pokazania.controller';
 import { Module } from '@nestjs/common';
@@ -19,6 +20,7 @@ import { PaymentsUser } from './pokazania/models/Payments_User.model';
 
 @Module({
   imports: [
+    ExcelModule,
     PokazaniaModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
@@ -48,7 +50,8 @@ import { PaymentsUser } from './pokazania/models/Payments_User.model';
     RolesModule,
     AuthModule,
   ],
-  controllers: [PokazaniaController],
+  controllers: [
+    ExcelController, PokazaniaController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
