@@ -21,7 +21,7 @@ export class ExcelService {
     let workbook = new Workbook();
     const fileName = 'maket.xlsx';
     workbook = await workbook.xlsx.readFile(fileName);
-    const worksheet = workbook.getWorksheet('20' + dto.year);
+    const worksheet = workbook.getWorksheet('20' + dto.fixedYear);
 
     for (let g = 0; g < users.length; g++) {
       const user = await this.userRepository.findOne({
@@ -51,7 +51,7 @@ export class ExcelService {
               electricityRow.getCell(8 + 4 * pokazaniaUser[i].month).value =
                 this.findByYearMonth(
                   paymentsUser,
-                  dto.year,
+                  dto.fixedYear,
                   pokazaniaUser[i].month,
                 ).electricity;
               waterRow.getCell(5 + 4 * pokazaniaUser[i].month).value =
@@ -59,7 +59,7 @@ export class ExcelService {
               waterRow.getCell(8 + 4 * pokazaniaUser[i].month).value =
                 this.findByYearMonth(
                   paymentsUser,
-                  dto.year,
+                  dto.fixedYear,
                   pokazaniaUser[i].month,
                 ).water;
               electricityRow.commit();

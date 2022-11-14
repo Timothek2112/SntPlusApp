@@ -1,7 +1,9 @@
 import {
+  BelongsTo,
   BelongsToMany,
   Column,
   DataType,
+  ForeignKey,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -47,6 +49,9 @@ export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
   @Column({ type: DataType.BOOLEAN })
   isNewCounter: boolean;
 
-  @BelongsToMany(() => User, () => PokazaniaUser)
-  pokazania: Pokazania[];
+  @ForeignKey(() => User)
+  userId: number;
+
+  @BelongsTo(() => User)
+  user: User;
 }

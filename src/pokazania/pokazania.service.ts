@@ -29,9 +29,9 @@ export class PokazaniaService {
     const user = await this.userService.getUserById(id);
 
     const dublicatePokazanie = await this.pokazania.findOne({
-      where: { month: dto.month, year: dto.year },
+      where: { month: dto.month, year: dto.year, userId: user.id },
     });
-
+    //TODO: Дополнить поиск дубликантов оплаты как выше с показаниями
     if (dublicatePokazanie) {
       await this.pokazania.update(dto, {
         where: { month: dto.month, year: dto.year },
@@ -46,6 +46,7 @@ export class PokazaniaService {
       const pokazanie = await this.pokazania.create(dto);
       await user.$add('pokazania', [pokazanie.id]);
       user.pokazania.push(pokazanie);
+      //await pokazanie.$add('user', [user]);
       return pokazanie;
     }
   }

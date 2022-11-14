@@ -5,6 +5,8 @@ import {
   DataType,
   Model,
   Table,
+  HasMany,
+  ForeignKey,
 } from 'sequelize-typescript';
 import { Debts } from 'src/pokazania/models/debts.model';
 import { DebtsUser } from 'src/pokazania/models/Debts_User.model';
@@ -70,15 +72,15 @@ export class User extends Model<User, UserCreationAttrs> {
   @Column({ type: DataType.INTEGER, allowNull: false })
   uchastok: number;
 
-  @BelongsToMany(() => Role, () => UserRoles)
-  roles: Role[];
+  @ForeignKey(() => Role)
+  roleId: number;
 
-  @BelongsToMany(() => Pokazania, () => PokazaniaUser)
+  @HasMany(() => Pokazania)
   pokazania: Pokazania[];
 
-  @BelongsToMany(() => Debts, () => DebtsUser)
+  @HasMany(() => Debts)
   debts: Debts[];
 
-  @BelongsToMany(() => Payment, () => PaymentsUser)
+  @HasMany(() => Payment)
   payments: Payment[];
 }

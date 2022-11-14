@@ -4,7 +4,9 @@ https://docs.nestjs.com/providers#services
 
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { identity } from 'rxjs';
 import { Op } from 'sequelize';
+import { PeriodDto } from 'src/excel/dto/period.dto';
 import { GetUserDto } from 'src/getPass/dto/get-user.dto';
 import { User } from 'src/getPass/models/user.model';
 import { DebtDto } from './dto/create-debt.dto';
@@ -20,6 +22,7 @@ export class DebtService {
     @InjectModel(Rates) private ratesRepository: typeof Rates,
     @InjectModel(User) private userRepository: typeof User,
     @InjectModel(Debts) private debtRepository: typeof Debts,
+    @InjectModel(Pokazania) private pokazaniaRepository: typeof Pokazania,
   ) {}
 
   //TODO: Изменить функцию returnDebt, убрав использование
@@ -106,8 +109,13 @@ export class DebtService {
       include: { all: true },
     });
 
+    if (!user) return { error: 'Пользователя не существует' };
+
     const payments = this.calculatePaymentSum(user);
-    const calculatedDebt: DebtDto = await this.calculateDebts(user);
+    const calculatedDebt = await this.calculateDebts(user);
+
+    if ('error' in calculatedDebt) return calculatedDebt;
+
     calculatedDebt.applyPayment(payments);
 
     calculatedDebt.lastPaymentId = user.payments[user.payments.length - 1].id;
@@ -137,11 +145,11 @@ export class DebtService {
 
   async calculateDebts(user: User) {
     const userPokazania = user.pokazania;
-    let rate = await this.findRate(userPokazania);
-    const calculatedDebt = new DebtDto();
+    let rate = await this.findRate(userPokazania[0]);
+    const calculatedDebt: DebtDto = new DebtDto();
 
-    // eslint-disable-next-line prettier/prettier
-    
+    if (!rate) return { error: 'Нет ни одной записи в таблице rates' };
+
     try {
       calculatedDebt.electricity =
         userPokazania[0].electricity * rate.electricity;
@@ -151,7 +159,7 @@ export class DebtService {
     } catch {}
 
     for (let i = 1; i < userPokazania.length; i++) {
-      rate = await this.findRate(userPokazania);
+      rate = await this.findRate(userPokazania[i]);
 
       const actual = userPokazania[i];
       const last = userPokazania[i - 1];
@@ -170,13 +178,29 @@ export class DebtService {
     return calculatedDebt;
   }
 
-  async findRate(userPokazania: Pokazania[]) {
+  async findRate(userPokazania: Pokazania) {
     return await this.ratesRepository.findOne({
       where: {
-        month: { [Op.lte]: userPokazania[0].month },
-        year: { [Op.lte]: userPokazania[0].year },
+        month: { [Op.lte]: userPokazania.month },
+        year: { [Op.lte]: userPokazania.year },
       },
       order: [['id', 'DESC']],
     });
+  }
+
+  async getDebtForPeriod(dto: PeriodDto, userDto: GetUserDto) {
+    const user = await this.userRepository.findOne({
+      where: { id: userDto.userid },
+      include: { all: true },
+    });
+    const userPokazaniaForPeriod = this.pokazaniaRepository.findAll({
+      where: {
+        month: { [Op.gte]: dto.startPeriodM, [Op.lte]: dto.endPeriodM },
+        year: { [Op.gte]: dto.startPeriodY, [Op.lte]: dto.endPeriodY },
+        userId: user.id,
+      },
+    });
+
+
   }
 }

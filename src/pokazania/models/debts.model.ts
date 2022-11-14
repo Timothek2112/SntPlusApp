@@ -4,6 +4,8 @@ import {
   Table,
   Model,
   BelongsToMany,
+  BelongsTo,
+  ForeignKey,
 } from 'sequelize-typescript';
 import { User } from 'src/getPass/models/user.model';
 import { DebtsUser } from './Debts_User.model';
@@ -49,6 +51,9 @@ export class Debts extends Model<Debts, DebtCreationAttrs> {
   @Column({ type: DataType.INTEGER })
   lastPaymentId: number;
 
-  @BelongsToMany(() => User, () => DebtsUser)
-  debts: Debts[];
+  @ForeignKey(() => User)
+  userId: number;
+
+  @BelongsTo(() => User)
+  user: User;
 }

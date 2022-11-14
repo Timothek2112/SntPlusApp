@@ -14,8 +14,7 @@ export class GetPassService {
   async createUser(dto: CreateUserDto) {
     const user = await this.userRepository.create(dto);
     const role = await this.roleService.getRole('USER');
-    await user.$set('roles', [role.id]);
-    user.roles = [role];
+    await user.$set('roleId', [role.id]);
     return user;
   }
 

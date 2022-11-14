@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   BelongsToMany,
   Column,
   DataType,
@@ -24,7 +25,4 @@ export class Role extends Model<Role, RoleCreationAttrs> {
 
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   role: string;
-
-  @BelongsToMany(() => User, () => UserRoles)
-  users: User[];
 }
