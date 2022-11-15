@@ -1,6 +1,4 @@
 import {
-  BelongsTo,
-  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
@@ -8,7 +6,6 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { User } from 'src/getPass/models/user.model';
-import { PaymentsUser } from './Payments_User.model';
 
 interface PaymentCreationAttrs {
   water: number;

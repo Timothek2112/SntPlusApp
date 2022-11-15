@@ -1,6 +1,5 @@
 import {
   BelongsTo,
-  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
@@ -8,7 +7,6 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { User } from '../../getPass/models/user.model';
-import { PokazaniaUser } from './Pokazania_User.model';
 
 interface PokazaniaCreationAttr {
   water: number;

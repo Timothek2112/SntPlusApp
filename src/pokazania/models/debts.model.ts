@@ -3,12 +3,10 @@ import {
   DataType,
   Table,
   Model,
-  BelongsToMany,
   BelongsTo,
   ForeignKey,
 } from 'sequelize-typescript';
 import { User } from 'src/getPass/models/user.model';
-import { DebtsUser } from './Debts_User.model';
 
 interface DebtCreationAttrs {
   water: number;

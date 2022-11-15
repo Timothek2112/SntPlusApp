@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  BelongsToMany,
   Column,
   DataType,
   Model,
@@ -9,13 +8,9 @@ import {
   ForeignKey,
 } from 'sequelize-typescript';
 import { Debts } from 'src/pokazania/models/debts.model';
-import { DebtsUser } from 'src/pokazania/models/Debts_User.model';
 import { Payment } from 'src/pokazania/models/payments.model';
-import { PaymentsUser } from 'src/pokazania/models/Payments_User.model';
 import { Pokazania } from '../../pokazania/models/pokazania.model';
-import { PokazaniaUser } from '../../pokazania/models/Pokazania_User.model';
 import { Role } from '../../roles/roles/models/roles.model';
-import { UserRoles } from './user_roles.model';
 
 interface UserCreationAttrs {
   login: string;

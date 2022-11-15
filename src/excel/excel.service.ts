@@ -7,7 +7,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Workbook } from 'exceljs';
 import { User } from 'src/getPass/models/user.model';
 import { Payment } from 'src/pokazania/models/payments.model';
-import { Pokazania } from 'src/pokazania/models/pokazania.model';
 import { PeriodDto } from './dto/period.dto';
 
 @Injectable()

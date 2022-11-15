@@ -11,7 +11,6 @@ import { Payment } from './models/payments.model';
 import { Pokazania } from './models/pokazania.model';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { DebtService } from './debt.service';
-import { CreateUserDto } from 'src/getPass/dto/create-user.dto';
 import { GetUserDto } from 'src/getPass/dto/get-user.dto';
 
 @Injectable()
