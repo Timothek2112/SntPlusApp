@@ -50,8 +50,7 @@ import { PaymentsUser } from './pokazania/models/Payments_User.model';
     RolesModule,
     AuthModule,
   ],
-  controllers: [
-    ExcelController, PokazaniaController],
+  controllers: [ExcelController, PokazaniaController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

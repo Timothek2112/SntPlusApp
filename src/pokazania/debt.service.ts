@@ -200,7 +200,5 @@ export class DebtService {
         userId: user.id,
       },
     });
-
-
   }
 }
