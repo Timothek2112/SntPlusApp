@@ -4,4 +4,5 @@ export class PeriodDto {
   readonly startPeriodY: number;
   readonly endPeriodY: number;
   readonly fixedYear: number;
+  readonly userId: number;
 }

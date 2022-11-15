@@ -34,7 +34,7 @@ export class PokazaniaService {
     //TODO: Дополнить поиск дубликантов оплаты как выше с показаниями
     if (dublicatePokazanie) {
       await this.pokazania.update(dto, {
-        where: { month: dto.month, year: dto.year },
+        where: { month: dto.month, year: dto.year, userId: user.id },
       });
 
       const userDto: GetUserDto = new GetUserDto();
@@ -57,12 +57,12 @@ export class PokazaniaService {
       include: { all: true },
     });
     const dublicatePayment = await this.paymentRepository.findOne({
-      where: { month: dto.month, year: dto.year },
+      where: { month: dto.month, year: dto.year, userId: user.id },
     });
 
     if (dublicatePayment) {
       await this.paymentRepository.update(dto, {
-        where: { month: dto.month, year: dto.year },
+        where: { month: dto.month, year: dto.year, userId: user.id },
       });
 
       const userDto: GetUserDto = new GetUserDto();

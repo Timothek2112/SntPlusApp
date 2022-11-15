@@ -4,7 +4,6 @@ https://docs.nestjs.com/providers#services
 
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { identity } from 'rxjs';
 import { Op } from 'sequelize';
 import { PeriodDto } from 'src/excel/dto/period.dto';
 import { GetUserDto } from 'src/getPass/dto/get-user.dto';
@@ -13,6 +12,7 @@ import { DebtDto } from './dto/create-debt.dto';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { CreateRateDto } from './dto/create-rate.dto';
 import { Debts } from './models/debts.model';
+import { Payment } from './models/payments.model';
 import { Pokazania } from './models/pokazania.model';
 import { Rates } from './models/rates.model';
 
@@ -23,6 +23,7 @@ export class DebtService {
     @InjectModel(User) private userRepository: typeof User,
     @InjectModel(Debts) private debtRepository: typeof Debts,
     @InjectModel(Pokazania) private pokazaniaRepository: typeof Pokazania,
+    @InjectModel(Payment) private paymentsRepository: typeof Payment,
   ) {}
 
   //TODO: Изменить функцию returnDebt, убрав использование
@@ -188,17 +189,43 @@ export class DebtService {
     });
   }
 
-  async getDebtForPeriod(dto: PeriodDto, userDto: GetUserDto) {
+  async getPokazaniaForPeriod(dto: PeriodDto, switchState: string) {
     const user = await this.userRepository.findOne({
-      where: { id: userDto.userid },
+      where: { id: dto.userId },
       include: { all: true },
     });
-    const userPokazaniaForPeriod = this.pokazaniaRepository.findAll({
-      where: {
-        month: { [Op.gte]: dto.startPeriodM, [Op.lte]: dto.endPeriodM },
-        year: { [Op.gte]: dto.startPeriodY, [Op.lte]: dto.endPeriodY },
-        userId: user.id,
-      },
-    });
+
+    let userForPeriod;
+    if (switchState == 'Pokazania') {
+      userForPeriod = await this.pokazaniaRepository.findAll({
+        where: {
+          month: { [Op.gte]: dto.startPeriodM, [Op.lte]: dto.endPeriodM },
+          year: { [Op.gte]: dto.startPeriodY, [Op.lte]: dto.endPeriodY },
+          userId: user.id,
+        },
+      });
+    } else if (switchState == 'Payments') {
+      userForPeriod = await this.paymentsRepository.findAll({
+        where: {
+          month: { [Op.gte]: dto.startPeriodM, [Op.lte]: dto.endPeriodM },
+          year: { [Op.gte]: dto.startPeriodY, [Op.lte]: dto.endPeriodY },
+          userId: user.id,
+        },
+      });
+    }
+
+    const jsonPokazania = {};
+    for (let i = 0; i < userForPeriod.length; i++) {
+      const pokazanie = userForPeriod[i];
+      jsonPokazania[pokazanie.month] = {
+        month: pokazanie.month,
+        year: pokazanie.year,
+        water: pokazanie.water,
+        electricity: pokazanie.electricity,
+        penality: pokazanie.penality,
+        membership: pokazanie.membership,
+      };
+    }
+    return jsonPokazania;
   }
 }

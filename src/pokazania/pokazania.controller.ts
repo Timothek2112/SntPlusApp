@@ -4,6 +4,7 @@ https://docs.nestjs.com/controllers#controllers
 
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { PeriodDto } from 'src/excel/dto/period.dto';
 import { GetUserDto } from '../getPass/dto/get-user.dto';
 import { DebtService } from './debt.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
@@ -39,5 +40,15 @@ export class PokazaniaController {
   @Post('/createPayment')
   createPayment(@Body() dto: CreatePaymentDto) {
     return this.pokazaniaService.createPayment(dto);
+  }
+
+  @Post('/pokazaniaForPeriod')
+  pokazaniaPeriod(@Body() dto: PeriodDto) {
+    return this.debtService.getPokazaniaForPeriod(dto, 'Pokazania');
+  }
+
+  @Post('/paymentsForPeriod')
+  paymentsPeriod(@Body() dto: PeriodDto) {
+    return this.debtService.getPokazaniaForPeriod(dto, 'Payments');
   }
 }
