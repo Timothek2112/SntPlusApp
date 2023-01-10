@@ -7,12 +7,13 @@ import { GetPassController } from './get-pass.controller';
 import { GetPassService } from './get-pass.service';
 import { UserRoles } from './models/user_roles.model';
 import { AuthModule } from '../auth/auth.module';
+import { Uchastki } from './models/uchastki.model';
 
 @Module({
   controllers: [GetPassController],
   providers: [GetPassService],
   imports: [
-    SequelizeModule.forFeature([User, Role, UserRoles]),
+    SequelizeModule.forFeature([User, Role, UserRoles, Uchastki]),
     RolesModule,
     forwardRef(() => AuthModule),
   ],

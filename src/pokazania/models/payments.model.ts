@@ -1,17 +1,23 @@
 import {
+  AfterCreate,
+  AfterUpdate,
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
   Model,
   Table,
 } from 'sequelize-typescript';
+import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { User } from 'src/getPass/models/user.model';
+import { DebtService } from '../debt.service';
 
 interface PaymentCreationAttrs {
   water: number;
   electricity: number;
   penality: number;
   membership: number;
+  target: number;
   month: number;
   year: number;
 }
@@ -36,6 +42,9 @@ export class Payment extends Model<Payment, PaymentCreationAttrs> {
   penality: number;
 
   @Column({ type: DataType.FLOAT })
+  target: number;
+
+  @Column({ type: DataType.FLOAT })
   membership: number;
 
   @Column({ type: DataType.INTEGER })
@@ -44,6 +53,9 @@ export class Payment extends Model<Payment, PaymentCreationAttrs> {
   @Column({ type: DataType.INTEGER })
   year: number;
 
-  @ForeignKey(() => User)
-  userId: number;
+  @ForeignKey(() => Uchastki)
+  uchastokId: number;
+
+  @BelongsTo(() => Uchastki)
+  uchastok: Uchastki;
 }

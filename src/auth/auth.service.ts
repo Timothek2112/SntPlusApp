@@ -11,31 +11,26 @@ import { CreateUserDto } from '../getPass/dto/create-user.dto';
 import { User } from '../getPass/models/user.model';
 import { GetPassService } from '../getPass/get-pass.service';
 import * as bcrypt from 'bcrypt';
+import { createRequire } from 'module';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: GetPassService,
     private jwtService: JwtService,
+    @InjectModel(User) private userRepository: typeof User,
   ) {}
 
   async login(userDto: CreateUserDto) {
     const result = [];
-    try {
-      let user = null;
-      user = await this.validateUser(userDto);
-      
-      if (user == null) {
-        throw new UnauthorizedException({ message: 'Неверный логин или пароль' });
-      }
-      result.push(await this.generateToken(user));
-      result.push(user.id);
-      return result;
-    } catch (e) {
-      console.log("login er");
-      result.push("error", "wrong password");
-      return result;
-    }
+   
+    let user = null;
+    user = await this.validateUser(userDto);
+    result.push(await this.generateToken(user));
+    result.push(user.id);
+    return result;
+    
   }
 
   async registration(userDto: CreateUserDto) {
@@ -60,22 +55,19 @@ export class AuthService {
   }
 
   private async validateUser(userDto: CreateUserDto) {
-    try {
-      const user = await this.userService.getUserByLogin(userDto.login);
-
-      const passwordEquals = await bcrypt.compare(
+    const user = await this.userService.getUserByLogin(userDto.login);
+    let passwordEquals = null;
+    try{
+      passwordEquals = await bcrypt.compare(
         userDto.password,
         user.password,
       );
-
-      if (user && passwordEquals) {
-        return user;
-      }
-
-      throw new UnauthorizedException({ message: 'Неверный логин или пароль' });
-    } catch (e) {
-      console.log(e.message);
+    }catch {}
+    if (user && passwordEquals) {
+      return user;
     }
+
+    throw new UnauthorizedException({ error: 'Неверный логин или пароль' });
   }
 
   public async getUser(userid: number){
@@ -92,5 +84,10 @@ export class AuthService {
     }else{
       return '"message": "error: no user"';
     }
+  }
+
+  public async getUsersUchastki(userId: number){
+    const usersUchastki = await (await this.userRepository.findOne({where: {id: userId}, include:{all: true}}));
+    return usersUchastki.uchastki;
   }
 }

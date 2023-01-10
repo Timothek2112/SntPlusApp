@@ -2,14 +2,15 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { PeriodDto } from 'src/excel/dto/period.dto';
+import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
 import { GetUserDto } from '../getPass/dto/get-user.dto';
 import { DebtService } from './debt.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { CreatePokazanieDto } from './dto/create-pokazanie.dto';
 import { CreateRateDto } from './dto/create-rate.dto';
+import { PeriodDto } from './dto/period.dto';
 import { Pokazania } from './models/pokazania.model';
 import { PokazaniaService } from './pokazania.service';
 
@@ -33,7 +34,7 @@ export class PokazaniaController {
   }
 
   @Post('/calculateDebt')
-  calculate(@Body() dto: GetUserDto) {
+  calculate(@Body() dto: getUchastokDto) {
     return this.debtService.returnDebt(dto);
   }
 
@@ -43,12 +44,21 @@ export class PokazaniaController {
   }
 
   @Post('/pokazaniaForPeriod')
-  pokazaniaPeriod(@Body() dto: PeriodDto) {
-    return this.debtService.getPokazaniaForPeriod(dto, 'Pokazania');
+  async pokazaniaPeriod(@Body() dto: PeriodDto) {
+    return await this.debtService.returnForPeriod(dto, 'Pokazania');
   }
 
   @Post('/paymentsForPeriod')
-  paymentsPeriod(@Body() dto: PeriodDto) {
-    return this.debtService.getPokazaniaForPeriod(dto, 'Payments');
+  async paymentsPeriod(@Body() dto: PeriodDto) {
+    return await this.debtService.returnForPeriod(dto, 'Payments');
   }
+
+  @Post('/ratesForPeriod')
+  async ratesForPeriod(@Body() dto: PeriodDto) {
+    return await this.debtService.getRatesForPeriod(dto);
+  }
+  /* @Post('/debtsForPeriod')
+  async electricityDebtsForPeriod(@Body() dto: PeriodDto) {
+    return await this.debtService.returnDebtsForPeriod(dto);
+  } */
 }

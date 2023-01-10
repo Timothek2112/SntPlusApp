@@ -6,6 +6,7 @@ import {
   BelongsTo,
   ForeignKey,
 } from 'sequelize-typescript';
+import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { User } from 'src/getPass/models/user.model';
 
 interface DebtCreationAttrs {
@@ -13,6 +14,7 @@ interface DebtCreationAttrs {
   electricity: number;
   membership: number;
   penality: number;
+  target: number;
 }
 
 @Table({ tableName: 'debts' })
@@ -38,20 +40,11 @@ export class Debts extends Model<Debts, DebtCreationAttrs> {
   membership: number;
 
   @Column({ type: DataType.FLOAT })
-  month: number;
+  target: number;
 
-  @Column({ type: DataType.FLOAT })
-  year: number;
+  @ForeignKey(() => Uchastki)
+  uchastokId: number;
 
-  @Column({ type: DataType.INTEGER })
-  lastPokazanieId: number;
-
-  @Column({ type: DataType.INTEGER })
-  lastPaymentId: number;
-
-  @ForeignKey(() => User)
-  userId: number;
-
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => Uchastki)
+  uchastok: Uchastki;
 }

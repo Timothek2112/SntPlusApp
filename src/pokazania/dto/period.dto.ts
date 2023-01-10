@@ -3,6 +3,5 @@ export class PeriodDto {
   readonly endPeriodM: number;
   readonly startPeriodY: number;
   readonly endPeriodY: number;
-  readonly fixedYear: number;
-  readonly userId: number;
+  readonly uchastokId: number;
 }

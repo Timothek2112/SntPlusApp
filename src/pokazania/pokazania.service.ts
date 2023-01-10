@@ -12,6 +12,8 @@ import { Pokazania } from './models/pokazania.model';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { DebtService } from './debt.service';
 import { GetUserDto } from 'src/getPass/dto/get-user.dto';
+import { Uchastki } from 'src/getPass/models/uchastki.model';
+import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
 
 @Injectable()
 export class PokazaniaService {
@@ -19,60 +21,84 @@ export class PokazaniaService {
     @InjectModel(Pokazania) private pokazania: typeof Pokazania,
     @InjectModel(User) private userRepository: typeof User,
     @InjectModel(Payment) private paymentRepository: typeof Payment,
+    @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
     private userService: GetPassService,
     private debtService: DebtService,
   ) {}
 
   async createPokazanie(dto: CreatePokazanieDto) {
-    const id = dto.userid;
-    const user = await this.userService.getUserById(id);
+    const uchastok = await this.uchastkiRepository.findOne({
+      where: { uchastok: dto.uchastokId },
+    });
 
     const dublicatePokazanie = await this.pokazania.findOne({
-      where: { month: dto.month, year: dto.year, userId: user.id },
+      where: {
+        month: dto.month,
+        year: dto.year,
+        uchastokId: uchastok.uchastok,
+      },
     });
-    //TODO: Дополнить поиск дубликантов оплаты как выше с показаниями
     if (dublicatePokazanie) {
       await this.pokazania.update(dto, {
-        where: { month: dto.month, year: dto.year, userId: user.id },
+        where: {
+          month: dto.month,
+          year: dto.year,
+          uchastokId: uchastok.uchastok,
+        },
       });
 
-      const userDto: GetUserDto = new GetUserDto();
-      userDto.userid = id;
-      await this.debtService.calculateNewDebt(userDto);
+      const uchastokDto: getUchastokDto = new getUchastokDto();
+      uchastokDto.uchastokId = uchastok.uchastok;
+      await this.debtService.calculateNewDebt(uchastokDto);
 
       return dto;
     } else {
       const pokazanie = await this.pokazania.create(dto);
-      await user.$add('pokazania', [pokazanie.id]);
-      user.pokazania.push(pokazanie);
-      //await pokazanie.$add('user', [user]);
+      await uchastok.$add('pokazania', [pokazanie.id]);
+      const uchastokDto: getUchastokDto = new getUchastokDto();
+      uchastokDto.uchastokId = dto.uchastokId;
+      await this.debtService.calculateNewDebt(uchastokDto);
+
       return pokazanie;
     }
   }
 
   async createPayment(dto: CreatePaymentDto) {
-    const user = await this.userRepository.findOne({
-      where: { id: dto.userId },
+    const uchastok = await this.uchastkiRepository.findOne({
+      where: { uchastok: dto.uchastokId },
       include: { all: true },
     });
     const dublicatePayment = await this.paymentRepository.findOne({
-      where: { month: dto.month, year: dto.year, userId: user.id },
+      where: {
+        month: dto.month,
+        year: dto.year,
+        uchastokId: uchastok.uchastok,
+      },
     });
 
     if (dublicatePayment) {
       await this.paymentRepository.update(dto, {
-        where: { month: dto.month, year: dto.year, userId: user.id },
+        where: {
+          month: dto.month,
+          year: dto.year,
+          uchastokId: uchastok.uchastok,
+        },
       });
 
-      const userDto: GetUserDto = new GetUserDto();
-      userDto.userid = dto.userId;
-      await this.debtService.calculateNewDebt(userDto);
+      const uchastokDto: getUchastokDto = new getUchastokDto();
+      uchastokDto.uchastokId = dto.uchastokId;
+      await this.debtService.calculateNewDebt(uchastokDto);
 
       return dublicatePayment;
     } else {
       const payment = await this.paymentRepository.create(dto);
-      await user.$add('payments', [payment.id]);
-      user.payments.push(payment);
+      await uchastok.$add('payments', [payment.id]);
+      uchastok.payments.push(payment);
+
+      const uchastokDto: getUchastokDto = new getUchastokDto();
+      uchastokDto.uchastokId = dto.uchastokId;
+      await this.debtService.calculateNewDebt(uchastokDto);
+
       return payment;
     }
   }

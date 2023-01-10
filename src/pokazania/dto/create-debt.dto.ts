@@ -4,17 +4,15 @@ export class DebtDto {
   water: number;
   electricity: number;
   membership: number;
-  month: number;
-  year: number;
+  target: number;
   penality: number;
-  userId: number;
-  lastPokazanieId: number;
-  lastPaymentId: number;
+  uchastokId: number;
 
   applyPayment(payment: CreatePaymentDto) {
     this.water -= payment.water;
     this.electricity -= payment.electricity;
     this.membership -= payment.membership;
     this.penality -= payment.penality;
+    this.target -= payment.target;
   }
 }

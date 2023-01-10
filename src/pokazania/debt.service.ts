@@ -1,16 +1,17 @@
+/* eslint-disable prettier/prettier */
 /*
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
-import { PeriodDto } from 'src/excel/dto/period.dto';
-import { GetUserDto } from 'src/getPass/dto/get-user.dto';
+import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
+import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { User } from 'src/getPass/models/user.model';
 import { DebtDto } from './dto/create-debt.dto';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { CreateRateDto } from './dto/create-rate.dto';
+import { PeriodDto } from './dto/period.dto';
 import { Debts } from './models/debts.model';
 import { Payment } from './models/payments.model';
 import { Pokazania } from './models/pokazania.model';
@@ -24,11 +25,8 @@ export class DebtService {
     @InjectModel(Debts) private debtRepository: typeof Debts,
     @InjectModel(Pokazania) private pokazaniaRepository: typeof Pokazania,
     @InjectModel(Payment) private paymentsRepository: typeof Payment,
+    @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
   ) {}
-
-  //TODO: Изменить функцию returnDebt, убрав использование
-  //функции calculateNewDebt, вместо этого добавить использование
-  //функции calculateNewDebt при добавлении новых показаний и оплат
 
   async createRate(dto: CreateRateDto) {
     let rate = null;
@@ -48,90 +46,38 @@ export class DebtService {
     }
   }
 
-  async returnDebt(dto: GetUserDto) {
-    if (await this.isLastDebtActual(dto)) {
-      const user = await this.userRepository.findOne({
-        where: { id: dto.userid },
-        include: { all: true },
-      });
-
-      const debt = user.debts[user.debts.length - 1];
-      return debt;
-    } else {
-      return await this.calculateNewDebt(dto);
-    }
+  async returnDebt(dto: getUchastokDto) {
+    const uchastok = await this.uchastkiRepository.findOne({where: {uchastok: dto.uchastokId}, include: {all: true}});
+    const debt = uchastok.debts[uchastok.debts.length - 1];
+    return debt;
   }
 
-  async isLastDebtActual(dto: GetUserDto) {
-    const user = await this.userRepository.findOne({
-      where: { id: dto.userid },
+  //считает сколько пользователь должен на данный момент 
+  public async calculateNewDebt(dto: getUchastokDto) {
+    const uchastok = await this.uchastkiRepository.findOne({
+      where: { uchastok: dto.uchastokId },
       include: { all: true },
     });
 
-    const lastActualPokazanieId = user.pokazania[user.pokazania.length - 1].id;
-    const lastActualPaymentId = user.payments[user.payments.length - 1].id;
-    const lastPokazanie = await this.findPokazaniaInDebts(
-      user.debts,
-      lastActualPokazanieId,
-    );
-    const lastPayment = await this.findPaymentsInDebts(
-      user.debts,
-      lastActualPaymentId,
-    );
+    if (!uchastok) return { error: 'Участка не существует' };
 
-    if (lastPokazanie && lastPayment) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  async findPokazaniaInDebts(arr: Debts[], target: number) {
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i].lastPokazanieId == target) {
-        return arr[i];
-      }
-    }
-    return null;
-  }
-
-  async findPaymentsInDebts(arr: Debts[], target: number) {
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i].lastPaymentId == target) {
-        return arr[i];
-      }
-    }
-    return null;
-  }
-
-  public async calculateNewDebt(dto: GetUserDto) {
-    const user = await this.userRepository.findOne({
-      where: { id: dto.userid },
-      include: { all: true },
-    });
-
-    if (!user) return { error: 'Пользователя не существует' };
-
-    const payments = this.calculatePaymentSum(user);
-    const calculatedDebt = await this.calculateDebts(user);
+    const payments = this.calculatePaymentSum(uchastok);
+    const calculatedDebt = await this.calculateDebts(uchastok);
 
     if ('error' in calculatedDebt) return calculatedDebt;
 
     calculatedDebt.applyPayment(payments);
 
-    calculatedDebt.lastPaymentId = user.payments[user.payments.length - 1].id;
-    calculatedDebt.lastPokazanieId =
-      user.pokazania[user.pokazania.length - 1].id;
-
     const newDebt = await this.debtRepository.create(calculatedDebt);
-    await user.$add('debts', [newDebt.id]);
-    user.debts.push(newDebt);
+    await uchastok.$add('debts', [newDebt.id]);
+    uchastok.debts.push(newDebt);
 
     return newDebt;
   }
 
-  calculatePaymentSum(user: User) {
-    const payments = user.payments;
+  //считает всю сумму оплаченную пользователем
+  calculatePaymentSum(uchastok: Uchastki) {
+    const payments = uchastok.payments;
     const sumPayment: CreatePaymentDto = new CreatePaymentDto();
 
     for (let i = 0; i < payments.length; i++) {
@@ -139,93 +85,205 @@ export class DebtService {
       sumPayment.electricity += payments[i].electricity;
       sumPayment.membership += payments[i].membership;
       sumPayment.penality += payments[i].penality;
+      sumPayment.target += payments[i].target;
     }
 
     return sumPayment;
   }
 
-  async calculateDebts(user: User) {
-    const userPokazania = user.pokazania;
+  //считает весь долг пользователя
+  async calculateDebts(uchastok: Uchastki): Promise<any> {
+    const userPokazania = uchastok.pokazania;
     let rate = await this.findRate(userPokazania[0]);
     const calculatedDebt: DebtDto = new DebtDto();
-
-    if (!rate) return { error: 'Нет ни одной записи в таблице rates' };
-
-    try {
-      calculatedDebt.electricity =
-        userPokazania[0].electricity * rate.electricity;
-      calculatedDebt.water = userPokazania[0].water * rate.water;
-      calculatedDebt.membership = userPokazania[0].membership;
-      calculatedDebt.penality = userPokazania[0].penality;
-    } catch {}
+    
+    if (!rate) throw new HttpException("Нет ни одного тарифа", 404);
+    
+    calculatedDebt.electricity = userPokazania[0].electricity * rate.electricity;
+    calculatedDebt.water = userPokazania[0].water * rate.water;
+    calculatedDebt.membership = userPokazania[0].membership;
+    calculatedDebt.penality = userPokazania[0].penality;
+    calculatedDebt.target = userPokazania[0].target;
 
     for (let i = 1; i < userPokazania.length; i++) {
       rate = await this.findRate(userPokazania[i]);
 
+      if(!rate) return null;
+
       const actual = userPokazania[i];
       const last = userPokazania[i - 1];
 
-      calculatedDebt.water += (actual.water - last.water) * rate.water;
-      // eslint-disable-next-line prettier/prettier
-      calculatedDebt.electricity += (actual.electricity - last.electricity) * rate.electricity;
+      if(last.water > actual.water){
+        calculatedDebt.water += actual.water * rate.water;
+      }else{
+        calculatedDebt.water += (actual.water - last.water) * rate.water;
+      }
+      
+      if(last.electricity > actual.electricity){
+        calculatedDebt.electricity += actual.electricity * rate.water;
+      }
+      else{
+        calculatedDebt.electricity += (actual.electricity - last.electricity) * rate.electricity;
+      }
+      
       calculatedDebt.membership += actual.membership;
       calculatedDebt.penality += actual.penality;
+      calculatedDebt.target += actual.target;
     }
-
-    /* for (let i = 1; i < user.debts.length; i++) {
-      calculatedDebt.penality += user.debts[i].penality - user.debts[i - 1].penality;
-    } */
 
     return calculatedDebt;
   }
 
-  async findRate(userPokazania: Pokazania) {
-    return await this.ratesRepository.findOne({
-      where: {
-        month: { [Op.lte]: userPokazania.month },
-        year: { [Op.lte]: userPokazania.year },
-      },
-      order: [['id', 'DESC']],
-    });
+  //Находит тариф, по которому следует считать переданное показание
+  async findRate(userPokazania: Pokazania | Payment) {
+    
+    const allRates = await this.ratesRepository.findAll({order: [['id', 'DESC']]});
+
+    for(let i = 0; i < allRates.length; i++){
+      if(userPokazania.year * 100 + userPokazania.month >= allRates[i].year * 100 + allRates[i].month){
+        return allRates[i];
+      }
+    }
+    return null;
   }
 
-  async getPokazaniaForPeriod(dto: PeriodDto, switchState: string) {
-    const user = await this.userRepository.findOne({
-      where: { id: dto.userId },
+  //Возвращает показания или оплаты за заданный период
+  async returnForPeriod(dto: PeriodDto, switchState: string) {
+    const uchastok = await this.uchastkiRepository.findOne({
+      where: { uchastok: dto.uchastokId },
       include: { all: true },
     });
+    let req;
+    let userForPeriod = [];
+    
+    const result = [];
 
-    let userForPeriod;
     if (switchState == 'Pokazania') {
-      userForPeriod = await this.pokazaniaRepository.findAll({
+      req = await this.pokazaniaRepository.findAll({
         where: {
-          month: { [Op.gte]: dto.startPeriodM, [Op.lte]: dto.endPeriodM },
-          year: { [Op.gte]: dto.startPeriodY, [Op.lte]: dto.endPeriodY },
-          userId: user.id,
+          uchastokId: dto.uchastokId,
         },
+        include: {all: true}
       });
+      console.log("Считаем показания");
     } else if (switchState == 'Payments') {
-      userForPeriod = await this.paymentsRepository.findAll({
+      req = await this.paymentsRepository.findAll({
         where: {
-          month: { [Op.gte]: dto.startPeriodM, [Op.lte]: dto.endPeriodM },
-          year: { [Op.gte]: dto.startPeriodY, [Op.lte]: dto.endPeriodY },
-          userId: user.id,
+          uchastokId: dto.uchastokId,
         },
+        include: {all: true}
       });
+      console.log("Считаем оплаты");
     }
 
-    const jsonPokazania = {};
+    userForPeriod = this.getForPeriod(
+      dto.startPeriodM,
+      dto.endPeriodM,
+      dto.startPeriodY,
+      dto.endPeriodY,
+      req,
+    );
+
+    const rates: Rates[] = await this.getRatesForPeriod(dto);
+
     for (let i = 0; i < userForPeriod.length; i++) {
-      const pokazanie = userForPeriod[i];
-      jsonPokazania[pokazanie.month] = {
-        month: pokazanie.month,
-        year: pokazanie.year,
-        water: pokazanie.water,
-        electricity: pokazanie.electricity,
-        penality: pokazanie.penality,
-        membership: pokazanie.membership,
-      };
+      const unit = userForPeriod[i];
+      
+      
+
+        result.push({
+        water: unit.water,
+        electricity: unit.electricity,
+        penality: unit.penality,
+        membership: unit.membership,
+        target: unit.target,
+        month: unit.month,
+        year: unit.year,
+      });
     }
-    return jsonPokazania;
+    return result;
   }
+
+  //Возвращает ставки за период
+  async getRatesForPeriod(dto: PeriodDto) {
+    const rates = await this.ratesRepository.findAll();
+    return this.getForPeriod(
+      dto.startPeriodM,
+      dto.endPeriodM,
+      dto.startPeriodY,
+      dto.endPeriodY,
+      rates,
+    );
+  }
+
+  //Возвращает записи переданного массива за заданный период
+  getForPeriod(startPeriodM, endPeriodM, startPeriodY, endPeriodY, req) {
+    const forPeriod = [];
+    for (let i = 0; i < req.length; i++) {
+      if (startPeriodY * 100 + startPeriodM <= req[i].year * 100 + req[i].month) {
+          if (endPeriodY * 100 + endPeriodM >= req[i].year * 100 + req[i].month) {
+            forPeriod.push(req[i]);
+          }
+      }
+    }
+    return forPeriod;
+  }
+
+  
+  /* async returnDebtsForPeriod(dto: PeriodDto){
+      const json = {}
+      let lastPokazanie;
+      for(let y = dto.startPeriodY; y <= dto.endPeriodY; y++){
+        for(let m = dto.startPeriodM; m <= dto.endPeriodM; m++){
+          const pokazanie = await this.pokazaniaRepository.findOne({where: {uchastokId: dto.uchastokId, month: m, year: y}});
+          const payment = await this.paymentsRepository.findOne({where: {uchastokId: dto.uchastokId, month: m, year: y}});
+          let rate;
+
+          if(pokazanie) { rate = await this.findRate(pokazanie); } 
+          else if(payment) {rate = await this.findRate(payment); }
+          else{ continue; }
+
+          //TODO: Надо доделать хуйню если предыдущее показание больше текущего
+          let electricityDebt;
+          let waterDebt;
+          let penalityDebt;
+          let membershipDebt;
+          let targetDebt;
+
+          if(lastPokazanie){
+            if(lastPokazanie.electricity > pokazanie.electricity){
+              electricityDebt = pokazanie.electricity * rate.electricity - payment.electricity;
+            }else{
+              electricityDebt = (pokazanie.electricity - lastPokazanie.electricity) * rate.electricity - payment.electricity;
+            }
+
+            if(lastPokazanie.water > pokazanie.water){
+              waterDebt = pokazanie.water * rate.water - payment.water;
+            }else{
+              waterDebt = (pokazanie.water - lastPokazanie.water) * rate.water - payment.water;
+            }
+          }else{
+            electricityDebt = pokazanie.electricity * rate.electricity - payment.electricity;
+            waterDebt = pokazanie.water * rate.water - payment.water;
+          }
+          console.log(lastPokazanie);
+          if(lastPokazanie){
+            penalityDebt = pokazanie.penality - payment.penality;
+            membershipDebt = pokazanie.membership - payment.membership;
+            targetDebt = pokazanie.target - payment.target;
+          }
+
+          json[m + "." + y] = {
+            electricity: electricityDebt,
+            water: waterDebt,
+            penality: penalityDebt,
+            membership: membershipDebt,
+            target: targetDebt
+          }
+          lastPokazanie = pokazanie;
+        }
+      }
+    return json;
+  } */
 }
+

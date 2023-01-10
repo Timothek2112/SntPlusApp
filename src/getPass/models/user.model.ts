@@ -11,6 +11,7 @@ import { Debts } from 'src/pokazania/models/debts.model';
 import { Payment } from 'src/pokazania/models/payments.model';
 import { Pokazania } from '../../pokazania/models/pokazania.model';
 import { Role } from '../../roles/roles/models/roles.model';
+import { Uchastki } from './uchastki.model';
 
 interface UserCreationAttrs {
   login: string;
@@ -60,22 +61,10 @@ export class User extends Model<User, UserCreationAttrs> {
   })
   @Column({ type: DataType.STRING, allowNull: false })
   surname: string;
-  @ApiProperty({
-    example: '56',
-    description: 'Номер участка владельца аккаунта',
-  })
-  @Column({ type: DataType.INTEGER, allowNull: false })
-  uchastok: number;
+
+  @HasMany(() => Uchastki)
+  uchastki: Uchastki[];
 
   @ForeignKey(() => Role)
   roleId: number;
-
-  @HasMany(() => Pokazania)
-  pokazania: Pokazania[];
-
-  @HasMany(() => Debts)
-  debts: Debts[];
-
-  @HasMany(() => Payment)
-  payments: Payment[];
 }

@@ -1,4 +1,6 @@
 import {
+  AfterCreate,
+  AfterUpdate,
   BelongsTo,
   Column,
   DataType,
@@ -6,12 +8,16 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
+import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { User } from '../../getPass/models/user.model';
+import { DebtService } from '../debt.service';
+import { Rates } from './rates.model';
 
 interface PokazaniaCreationAttr {
   water: number;
   electricity: number;
   membership: number;
+  target: number;
   isNewCounter: boolean;
   year: number;
   month: number;
@@ -38,6 +44,9 @@ export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
   @Column({ type: DataType.FLOAT, allowNull: true })
   penality: number;
 
+  @Column({ type: DataType.FLOAT })
+  target: number;
+
   @Column({ type: DataType.INTEGER })
   month: number;
 
@@ -47,9 +56,9 @@ export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
   @Column({ type: DataType.BOOLEAN })
   isNewCounter: boolean;
 
-  @ForeignKey(() => User)
-  userId: number;
+  @ForeignKey(() => Uchastki)
+  uchastokId: number;
 
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => Uchastki)
+  uchastok: Uchastki;
 }

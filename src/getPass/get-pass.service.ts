@@ -3,11 +3,14 @@ import { InjectModel } from '@nestjs/sequelize';
 import { RolesService } from '../roles/roles/roles.service';
 import { User } from './models/user.model';
 import { CreateUserDto } from './dto/create-user.dto';
+import { createUchastokDto } from './dto/create-uchastok.dto';
+import { Uchastki } from './models/uchastki.model';
 
 @Injectable()
 export class GetPassService {
   constructor(
     @InjectModel(User) private userRepository: typeof User,
+    @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
     private roleService: RolesService,
   ) {}
 
@@ -37,5 +40,15 @@ export class GetPassService {
       include: { all: true },
     });
     return user;
+  }
+
+  async createUchastok(dto: createUchastokDto) {
+    const user = await this.userRepository.findOne({
+      where: { id: dto.userId },
+    });
+
+    const uchastok = await this.uchastkiRepository.create(dto);
+    await user.$add('uchastki', [uchastok.uchastok]);
+    return uchastok;
   }
 }

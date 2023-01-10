@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  Param,
   Post,
   UnauthorizedException,
   UseGuards,
@@ -17,31 +19,19 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+  
   @ApiProperty({example: '{"login": example, "password": example', description: "Получение токена для логина"})
   @Post('/login')
   async login(@Body() userDto: CreateUserDto) {
-    try {
-      const TokenUser = await this.authService.login(userDto);
-      if (TokenUser == null) {
-        throw new UnauthorizedException({
-          message: 'Функция логина вернула null',
-        });
-      }
-      if(TokenUser[0] != "error"){
-        return { token: TokenUser[0], userid: TokenUser[1] };
-      }
-      else{
-        return {error: TokenUser[1]}
-      }
-    } catch (e) {
-      return {error: "wrong password"}
-    }
+    const TokenUser = await this.authService.login(userDto);
+    return { token: TokenUser[0], userid: TokenUser[1] };
   }
 
   @Post('/registration')
   registration(@Body() userDto: CreateUserDto) {
     return this.authService.registration(userDto);
   }
+
   @UseGuards(JwtAuthGuard)
   @Post('/getUser')
   getUser(@Body() userid: GetUserDto){
@@ -52,5 +42,10 @@ export class AuthController {
   @Get('/checkLogin')
   checkLogin() {
     return true;
+  }
+
+  @Get('/usersUchastki/:id')
+  getUsersUchastki(@Param('id') id: number){
+    return this.authService.getUsersUchastki(id);
   }
 }

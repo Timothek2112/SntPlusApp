@@ -1,5 +1,3 @@
-import { ExcelModule } from './excel/excel.module';
-import { ExcelController } from './excel/excel.controller';
 import { PokazaniaModule } from './pokazania/pokazania.module';
 import { PokazaniaController } from './pokazania/pokazania.controller';
 import { Module } from '@nestjs/common';
@@ -12,15 +10,11 @@ import { Role } from './roles/roles/models/roles.model';
 import { RolesModule } from './roles/roles/roles.module';
 import { AuthModule } from './auth/auth.module';
 import { Pokazania } from './pokazania/models/pokazania.model';
-import { PokazaniaUser } from './pokazania/models/Pokazania_User.model';
 import { Debts } from './pokazania/models/debts.model';
 import { Payment } from './pokazania/models/payments.model';
-import { DebtsUser } from './pokazania/models/Debts_User.model';
-import { PaymentsUser } from './pokazania/models/Payments_User.model';
-
+import { Uchastki } from './getPass/models/uchastki.model';
 @Module({
   imports: [
-    ExcelModule,
     PokazaniaModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
@@ -32,17 +26,7 @@ import { PaymentsUser } from './pokazania/models/Payments_User.model';
       username: process.env.POSTGRES_USER,
       password: String(process.env.POSTGRES_PASSWORD),
       database: process.env.POSTGRES_DB,
-      models: [
-        User,
-        Role,
-        UserRoles,
-        Pokazania,
-        PokazaniaUser,
-        Debts,
-        Payment,
-        DebtsUser,
-        PaymentsUser,
-      ],
+      models: [User, Role, UserRoles, Pokazania, Debts, Payment, Uchastki],
       autoLoadModels: true,
       dialectOptions: {},
     }),
@@ -50,7 +34,7 @@ import { PaymentsUser } from './pokazania/models/Payments_User.model';
     RolesModule,
     AuthModule,
   ],
-  controllers: [ExcelController, PokazaniaController],
+  controllers: [PokazaniaController],
   providers: [],
 })
 export class AppModule {}

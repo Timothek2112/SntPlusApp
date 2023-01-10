@@ -4,13 +4,15 @@ export class CreatePaymentDto {
   month: number;
   year: number;
   membership: number;
+  target: number;
   penality: number;
-  userId: number;
+  uchastokId: number;
 
   constructor() {
     this.water = 0;
     this.electricity = 0;
     this.membership = 0;
     this.penality = 0;
+    this.target = 0;
   }
 }
