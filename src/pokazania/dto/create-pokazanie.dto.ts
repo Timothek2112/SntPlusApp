@@ -16,4 +16,14 @@ export class CreatePokazanieDto {
     this.penality = 0;
     this.target = 0;
   }
+
+  public create(dto: CreatePokazanieDto) {
+    if (dto.electricity) this.electricity = dto.electricity;
+    if (dto.water) this.water = dto.water;
+    if (dto.membership) this.membership = dto.membership;
+    if (dto.penality) this.penality = dto.penality;
+    if (dto.target) this.target = dto.target;
+    this.month = dto.month;
+    this.year = dto.year;
+  }
 }

@@ -53,6 +53,8 @@ export class PokazaniaService {
 
       return dto;
     } else {
+      const pokazanieDto = new CreatePokazanieDto();
+      pokazanieDto.create(dto);
       const pokazanie = await this.pokazania.create(dto);
       await uchastok.$add('pokazania', [pokazanie.id]);
       const uchastokDto: getUchastokDto = new getUchastokDto();
