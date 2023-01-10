@@ -9,7 +9,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
-import { User } from 'src/getPass/models/user.model';
+import { Users } from 'src/getPass/models/user.model';
 import { DebtService } from '../debt.service';
 
 interface PaymentCreationAttrs {

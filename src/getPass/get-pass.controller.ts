@@ -14,7 +14,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { User } from './models/user.model';
+import { Users } from './models/user.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetPassService } from './get-pass.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -29,14 +29,14 @@ import { PatchUserDto } from 'src/auth/dto/patch-user.dto';
 export class GetPassController {
   constructor(private getPassService: GetPassService) {}
   @ApiOperation({ summary: 'Создание пользователя' })
-  @ApiResponse({ status: 201, type: User })
+  @ApiResponse({ status: 201, type: Users })
   @Post()
   create(@Body() userDto: CreateUserDto) {
     return this.getPassService.createUser(userDto);
   }
 
   @ApiOperation({ summary: 'Получение списка всех пользователей' })
-  @ApiResponse({ status: 200, type: [User] })
+  @ApiResponse({ status: 200, type: [Users] })
   @UseGuards(JwtAuthGuard)
   @Get()
   getAll() {

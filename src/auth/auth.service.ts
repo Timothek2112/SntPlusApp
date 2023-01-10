@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../getPass/dto/create-user.dto';
-import { User } from '../getPass/models/user.model';
+import { Users } from '../getPass/models/user.model';
 import { GetPassService } from '../getPass/get-pass.service';
 import * as bcrypt from 'bcrypt';
 import { createRequire } from 'module';
@@ -22,7 +22,7 @@ export class AuthService {
   constructor(
     private userService: GetPassService,
     private jwtService: JwtService,
-    @InjectModel(User) private userRepository: typeof User,
+    @InjectModel(Users) private userRepository: typeof Users,
     
   ) {}
 
@@ -55,7 +55,7 @@ export class AuthService {
 
   
 
-  private async generateToken(user: User) {
+  private async generateToken(user: Users) {
     const payload = { id: user.id, login: user.login, role: user.roleId};
     return this.jwtService.sign(payload);
   }

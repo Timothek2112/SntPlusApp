@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { RolesService } from '../roles/roles/roles.service';
-import { User } from './models/user.model';
+import { Users } from './models/user.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { createUchastokDto } from './dto/create-uchastok.dto';
 import { Uchastki } from './models/uchastki.model';
@@ -12,7 +12,7 @@ import { urlencoded } from 'express';
 @Injectable()
 export class GetPassService {
   constructor(
-    @InjectModel(User) private userRepository: typeof User,
+    @InjectModel(Users) private userRepository: typeof Users,
     @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
     @InjectModel(Role) private roleRepository: typeof Role,
     private roleService: RolesService,

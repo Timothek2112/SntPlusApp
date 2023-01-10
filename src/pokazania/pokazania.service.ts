@@ -5,7 +5,7 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { GetPassService } from '../getPass/get-pass.service';
-import { User } from '../getPass/models/user.model';
+import { Users } from '../getPass/models/user.model';
 import { CreatePokazanieDto } from './dto/create-pokazanie.dto';
 import { Payment } from './models/payments.model';
 import { Pokazania } from './models/pokazania.model';
@@ -19,7 +19,7 @@ import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
 export class PokazaniaService {
   constructor(
     @InjectModel(Pokazania) private pokazania: typeof Pokazania,
-    @InjectModel(User) private userRepository: typeof User,
+    @InjectModel(Users) private userRepository: typeof Users,
     @InjectModel(Payment) private paymentRepository: typeof Payment,
     @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
     private userService: GetPassService,

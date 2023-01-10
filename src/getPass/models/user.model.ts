@@ -24,7 +24,7 @@ interface UserCreationAttrs {
 }
 
 @Table({ tableName: 'users' })
-export class User extends Model<User, UserCreationAttrs> {
+export class Users extends Model<Users, UserCreationAttrs> {
   @ApiProperty({
     description:
       'Присваевается автоматически, уникальный идентификатор пользователя',

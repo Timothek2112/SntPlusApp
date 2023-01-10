@@ -10,7 +10,7 @@ import {
 import { Debts } from 'src/pokazania/models/debts.model';
 import { Payment } from 'src/pokazania/models/payments.model';
 import { Pokazania } from 'src/pokazania/models/pokazania.model';
-import { User } from './user.model';
+import { Users } from './user.model';
 
 export interface UchastokCreationAttrs {
   uchastok: number;
@@ -22,11 +22,11 @@ export class Uchastki extends Model<Uchastki, UchastokCreationAttrs> {
   @Column({ type: DataType.INTEGER, unique: true, primaryKey: true })
   uchastok: number;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => Users)
   userId: number;
 
-  @BelongsTo(() => User)
-  user: User;
+  @BelongsTo(() => Users)
+  user: Users;
 
   @HasMany(() => Pokazania)
   pokazania: Pokazania[];

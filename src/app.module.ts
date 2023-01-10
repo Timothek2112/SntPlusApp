@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { GetPassModule } from './getPass/get-pass.module';
 import { UserRoles } from './getPass/models/user_roles.model';
-import { User } from './getPass/models/user.model';
+import { Users } from './getPass/models/user.model';
 import { Role } from './roles/roles/models/roles.model';
 import { RolesModule } from './roles/roles/roles.module';
 import { AuthModule } from './auth/auth.module';
@@ -26,7 +26,7 @@ import { Uchastki } from './getPass/models/uchastki.model';
       username: process.env.POSTGRES_USER,
       password: String(process.env.POSTGRES_PASSWORD),
       database: process.env.POSTGRES_DB,
-      models: [User, Role, UserRoles, Pokazania, Debts, Payment, Uchastki],
+      models: [Users, Role, UserRoles, Pokazania, Debts, Payment, Uchastki],
       autoLoadModels: true,
       dialectOptions: {},
     }),

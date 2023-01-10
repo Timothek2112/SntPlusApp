@@ -7,7 +7,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
-import { User } from 'src/getPass/models/user.model';
+import { Users } from 'src/getPass/models/user.model';
 import { DebtDto } from './dto/create-debt.dto';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { CreateRateDto } from './dto/create-rate.dto';
@@ -21,7 +21,7 @@ import { Rates } from './models/rates.model';
 export class DebtService {
   constructor(
     @InjectModel(Rates) private ratesRepository: typeof Rates,
-    @InjectModel(User) private userRepository: typeof User,
+    @InjectModel(Users) private userRepository: typeof Users,
     @InjectModel(Debts) private debtRepository: typeof Debts,
     @InjectModel(Pokazania) private pokazaniaRepository: typeof Pokazania,
     @InjectModel(Payment) private paymentsRepository: typeof Payment,

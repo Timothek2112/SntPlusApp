@@ -2,7 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Role } from '../roles/roles/models/roles.model';
 import { RolesModule } from '../roles/roles/roles.module';
-import { User } from './models/user.model';
+import { Users } from './models/user.model';
 import { GetPassController } from './get-pass.controller';
 import { GetPassService } from './get-pass.service';
 import { UserRoles } from './models/user_roles.model';
@@ -13,7 +13,7 @@ import { Uchastki } from './models/uchastki.model';
   controllers: [GetPassController],
   providers: [GetPassService],
   imports: [
-    SequelizeModule.forFeature([User, Role, UserRoles, Uchastki]),
+    SequelizeModule.forFeature([Users, Role, UserRoles, Uchastki]),
     RolesModule,
     forwardRef(() => AuthModule),
   ],
