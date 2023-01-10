@@ -13,7 +13,10 @@ export class RolesService {
   }
 
   async getRole(role: string) {
-    const Role = await this.roleRepository.findOne({ where: { role } });
+    const Role = await this.roleRepository.findOne({
+      where: { role: role },
+      include: { all: true },
+    });
     return Role;
   }
 }

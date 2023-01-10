@@ -13,6 +13,9 @@ import { GetPassService } from '../getPass/get-pass.service';
 import * as bcrypt from 'bcrypt';
 import { createRequire } from 'module';
 import { InjectModel } from '@nestjs/sequelize';
+import { PatchUserDto } from './dto/patch-user.dto';
+import { Role } from 'src/roles/roles/models/roles.model';
+import { Uchastki } from 'src/getPass/models/uchastki.model';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +23,7 @@ export class AuthService {
     private userService: GetPassService,
     private jwtService: JwtService,
     @InjectModel(User) private userRepository: typeof User,
+    
   ) {}
 
   async login(userDto: CreateUserDto) {
@@ -48,6 +52,8 @@ export class AuthService {
     });
     return await this.generateToken(user);
   }
+
+  
 
   private async generateToken(user: User) {
     const payload = { id: user.id, login: user.login, role: user.roleId};

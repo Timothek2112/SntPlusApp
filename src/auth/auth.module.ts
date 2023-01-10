@@ -5,6 +5,8 @@ import { AuthController } from './auth.controller';
 import { GetPassModule } from '../getPass/get-pass.module';
 import { JwtModule } from '@nestjs/jwt';
 import { User } from 'src/getPass/models/user.model';
+import { Uchastki } from 'src/getPass/models/uchastki.model';
+import { Role } from 'src/roles/roles/models/roles.model';
 
 @Module({
   providers: [AuthService],
@@ -15,7 +17,7 @@ import { User } from 'src/getPass/models/user.model';
       signOptions: { expiresIn: '31d' },
     }),
     forwardRef(() => GetPassModule),
-    SequelizeModule.forFeature([User]),
+    SequelizeModule.forFeature([User, Uchastki, Role]),
   ],
   exports: [AuthService, JwtModule],
 })

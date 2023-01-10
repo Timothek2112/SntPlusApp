@@ -5,6 +5,7 @@ import {
   Get,
   HttpException,
   Param,
+  Patch,
   Post,
   UnauthorizedException,
   UseGuards,
@@ -13,6 +14,7 @@ import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../getPass/dto/create-user.dto';
 import { GetUserDto } from '../getPass/dto/get-user.dto';
 import { AuthService } from './auth.service';
+import { PatchUserDto } from './dto/patch-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @ApiTags('Авторизация')

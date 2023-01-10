@@ -9,15 +9,15 @@ export class CreateUserDto {
   })
   readonly password: string;
   @ApiProperty({ example: 'Иван', description: 'Имя владельца аккаунта' })
-  readonly name: string;
+  readonly name?: string;
   @ApiProperty({
     example: 'Иванович',
     description: 'Фамилия владельца аккаунта',
   })
-  readonly surname: string;
+  readonly surname?: string;
   @ApiProperty({
     example: '56',
     description: 'Номер участка владельца аккаунта',
   })
-  readonly uchastok: number;
+  readonly uchastok?: number;
 }

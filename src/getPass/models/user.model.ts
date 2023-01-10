@@ -6,6 +6,8 @@ import {
   Table,
   HasMany,
   ForeignKey,
+  BelongsTo,
+  HasOne,
 } from 'sequelize-typescript';
 import { Debts } from 'src/pokazania/models/debts.model';
 import { Payment } from 'src/pokazania/models/payments.model';
@@ -64,6 +66,9 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasMany(() => Uchastki)
   uchastki: Uchastki[];
+
+  @BelongsTo(() => Role)
+  role: Role;
 
   @ForeignKey(() => Role)
   roleId: number;

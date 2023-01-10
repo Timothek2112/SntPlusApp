@@ -7,12 +7,12 @@ export class RolesController {
   constructor(private rolesService: RolesService) {}
 
   @Post()
-  create(@Body() dto: CreateRoleDto) {
-    return this.rolesService.createRole(dto);
+  async create(@Body() dto: CreateRoleDto) {
+    return await this.rolesService.createRole(dto);
   }
 
   @Get('/:value')
-  getByValue(@Param('value') value: string) {
-    return this.rolesService.getRole(value);
+  async getByValue(@Param('value') value: string) {
+    return await this.rolesService.getRole(value);
   }
 }
