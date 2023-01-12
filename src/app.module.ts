@@ -1,3 +1,4 @@
+import { NewsModule } from './news/news.module';
 import { PokazaniaModule } from './pokazania/pokazania.module';
 import { PokazaniaController } from './pokazania/pokazania.controller';
 import { Module } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { Payment } from './pokazania/models/payments.model';
 import { Uchastki } from './getPass/models/uchastki.model';
 @Module({
   imports: [
+    NewsModule,
     PokazaniaModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
@@ -37,4 +39,4 @@ import { Uchastki } from './getPass/models/uchastki.model';
   controllers: [PokazaniaController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
