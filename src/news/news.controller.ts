@@ -29,4 +29,9 @@ export class NewsController {
     async getLastNewsHash(){
         return;
     }
+
+    @Get('/first/:number')
+    async getFirstNews(@Param('number') number: number){
+        return this.newsService.getFirstNews(number);   
+    }
  }
