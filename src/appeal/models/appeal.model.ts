@@ -35,4 +35,7 @@ export class appeal extends Model<appeal, AppealCreationArgs> {
 
   @BelongsTo(() => Users)
   user: Users;
+
+  @Column({ type: DataType.BOOLEAN })
+  isActual: boolean;
 }

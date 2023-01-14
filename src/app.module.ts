@@ -53,4 +53,4 @@ import { News } from './news/models/News.model';
   controllers: [PokazaniaController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
