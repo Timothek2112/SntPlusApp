@@ -18,7 +18,7 @@ export class NewsService {
     async createNews(dto: NewsDto){
         return await this.newsRepository.create(dto);
     }
-
+    
     async getFirstNews(number: number){
         const news = await this.newsRepository.findAll({order: ['id', 'DESC']})
         const result = []
@@ -26,5 +26,9 @@ export class NewsService {
             result.push(news[i])
         }        
         return result
+    }
+
+    async getAllNews(){
+        return await this.newsRepository.findAll();
     }
  }

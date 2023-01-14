@@ -1,3 +1,4 @@
+import { AppealModule } from './appeal/appeal.module';
 import { NewsModule } from './news/news.module';
 import { PokazaniaModule } from './pokazania/pokazania.module';
 import { PokazaniaController } from './pokazania/pokazania.controller';
@@ -14,8 +15,11 @@ import { Pokazania } from './pokazania/models/pokazania.model';
 import { Debts } from './pokazania/models/debts.model';
 import { Payment } from './pokazania/models/payments.model';
 import { Uchastki } from './getPass/models/uchastki.model';
+import { appeal } from './appeal/models/appeal.model';
+import { News } from './news/models/News.model';
 @Module({
   imports: [
+    AppealModule,
     NewsModule,
     PokazaniaModule,
     ConfigModule.forRoot({
@@ -28,7 +32,17 @@ import { Uchastki } from './getPass/models/uchastki.model';
       username: process.env.POSTGRES_USER,
       password: String(process.env.POSTGRES_PASSWORD),
       database: process.env.POSTGRES_DB,
-      models: [Users, Role, UserRoles, Pokazania, Debts, Payment, Uchastki],
+      models: [
+        Users,
+        Role,
+        UserRoles,
+        Pokazania,
+        Debts,
+        Payment,
+        Uchastki,
+        News,
+        appeal,
+      ],
       autoLoadModels: true,
       dialectOptions: {},
     }),

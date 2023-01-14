@@ -12,22 +12,12 @@ export class NewsController {
     constructor(private newsService: NewsService) {}
     @Get('/all')
     async getAllNews(){
-        return;
-    }
-
-    @Get('/:id')
-    async getNewsById(@Param('id') id: number){
-        return;
+        return this.newsService.getAllNews();
     }
 
     @Post()
     async createNews(@Body() dto: NewsDto){
         return this.newsService.createNews(dto);
-    }
-
-    @Get('/lastHash')
-    async getLastNewsHash(){
-        return;
     }
 
     @Get('/first/:number')

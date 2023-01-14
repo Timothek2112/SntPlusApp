@@ -14,6 +14,7 @@ import { Payment } from 'src/pokazania/models/payments.model';
 import { Pokazania } from '../../pokazania/models/pokazania.model';
 import { Role } from '../../roles/roles/models/roles.model';
 import { Uchastki } from './uchastki.model';
+import { appeal } from 'src/appeal/models/appeal.model';
 
 interface UserCreationAttrs {
   login: string;
@@ -72,4 +73,10 @@ export class Users extends Model<Users, UserCreationAttrs> {
 
   @ForeignKey(() => Role)
   roleId: number;
+
+  @HasMany(() => appeal)
+  appeals: appeal;
+
+  @ForeignKey(() => appeal)
+  appealId: number;
 }

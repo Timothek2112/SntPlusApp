@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 export class NewsCreationArgs {
@@ -25,5 +24,4 @@ export class News extends Model<News, NewsCreationArgs> {
 
   @Column({ type: DataType.DATE })
   date: Date;
-
 }
