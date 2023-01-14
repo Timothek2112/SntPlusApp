@@ -15,19 +15,9 @@ export class NewsController {
         return;
     }
 
-    @Get('/:id')
-    async getNewsById(@Param('id') id: number){
-        return;
-    }
-
     @Post()
     async createNews(@Body() dto: NewsDto){
         return this.newsService.createNews(dto);
-    }
-
-    @Get('/lastHash')
-    async getLastNewsHash(){
-        return;
     }
 
     @Get('/first/:number')

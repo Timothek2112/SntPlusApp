@@ -188,10 +188,7 @@ export class DebtService {
 
     for (let i = 0; i < userForPeriod.length; i++) {
       const unit = userForPeriod[i];
-      
-      
-
-        result.push({
+      result.push({
         water: unit.water,
         electricity: unit.electricity,
         penality: unit.penality,
@@ -228,62 +225,5 @@ export class DebtService {
     }
     return forPeriod;
   }
-
-  
-  /* async returnDebtsForPeriod(dto: PeriodDto){
-      const json = {}
-      let lastPokazanie;
-      for(let y = dto.startPeriodY; y <= dto.endPeriodY; y++){
-        for(let m = dto.startPeriodM; m <= dto.endPeriodM; m++){
-          const pokazanie = await this.pokazaniaRepository.findOne({where: {uchastokId: dto.uchastokId, month: m, year: y}});
-          const payment = await this.paymentsRepository.findOne({where: {uchastokId: dto.uchastokId, month: m, year: y}});
-          let rate;
-
-          if(pokazanie) { rate = await this.findRate(pokazanie); } 
-          else if(payment) {rate = await this.findRate(payment); }
-          else{ continue; }
-
-          //TODO: Надо доделать хуйню если предыдущее показание больше текущего
-          let electricityDebt;
-          let waterDebt;
-          let penalityDebt;
-          let membershipDebt;
-          let targetDebt;
-
-          if(lastPokazanie){
-            if(lastPokazanie.electricity > pokazanie.electricity){
-              electricityDebt = pokazanie.electricity * rate.electricity - payment.electricity;
-            }else{
-              electricityDebt = (pokazanie.electricity - lastPokazanie.electricity) * rate.electricity - payment.electricity;
-            }
-
-            if(lastPokazanie.water > pokazanie.water){
-              waterDebt = pokazanie.water * rate.water - payment.water;
-            }else{
-              waterDebt = (pokazanie.water - lastPokazanie.water) * rate.water - payment.water;
-            }
-          }else{
-            electricityDebt = pokazanie.electricity * rate.electricity - payment.electricity;
-            waterDebt = pokazanie.water * rate.water - payment.water;
-          }
-          console.log(lastPokazanie);
-          if(lastPokazanie){
-            penalityDebt = pokazanie.penality - payment.penality;
-            membershipDebt = pokazanie.membership - payment.membership;
-            targetDebt = pokazanie.target - payment.target;
-          }
-
-          json[m + "." + y] = {
-            electricity: electricityDebt,
-            water: waterDebt,
-            penality: penalityDebt,
-            membership: membershipDebt,
-            target: targetDebt
-          }
-          lastPokazanie = pokazanie;
-        }
-      }
-    return json;
-  } */
 }
 

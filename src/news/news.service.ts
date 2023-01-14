@@ -27,4 +27,8 @@ export class NewsService {
         }        
         return result
     }
+
+    async getAllNews(){
+        return await this.newsRepository.findAll();
+    }
  }
