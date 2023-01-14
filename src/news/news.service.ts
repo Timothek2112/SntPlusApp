@@ -7,7 +7,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { NewsDto } from './dto/news.dto';
 import { News } from './models/News.model';
-import { resourceLimits } from 'worker_threads';
 
 @Injectable()
 export class NewsService {
