@@ -2,6 +2,7 @@ import {
   BelongsTo,
   Column,
   DataType,
+  ForeignKey,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -35,6 +36,9 @@ export class appeal extends Model<appeal, AppealCreationArgs> {
 
   @BelongsTo(() => Users)
   user: Users;
+
+  @ForeignKey(() => Users)
+  userId: number;
 
   @Column({ type: DataType.BOOLEAN })
   isActual: boolean;

@@ -12,11 +12,7 @@ export class NewsController {
     constructor(private newsService: NewsService) {}
     @Get('/all')
     async getAllNews(){
-<<<<<<< HEAD
-        return;
-=======
         return this.newsService.getAllNews();
->>>>>>> 31ec98622898e8164c4e6ee159e10ce6ec4289f6
     }
 
     @Post()

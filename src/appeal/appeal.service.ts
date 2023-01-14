@@ -23,7 +23,6 @@ export class AppealService {
     });
     if (user) {
       user.$add('appeal', [appeal.id]);
-      user.appealId = appeal.id;
     } else {
       throw new HttpException('Пользователь не существует', 501);
     }
@@ -31,5 +30,7 @@ export class AppealService {
     return appeal;
   }
 
-  
+  async getAppealForId(id: number) {
+    return await this.appealRepository.findAll({ where: { userId: id } });
+  }
 }

@@ -75,8 +75,5 @@ export class Users extends Model<Users, UserCreationAttrs> {
   roleId: number;
 
   @HasMany(() => appeal)
-  appeals: appeal;
-
-  @ForeignKey(() => appeal)
-  appealId: number;
+  appeals: appeal[];
 }
