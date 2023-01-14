@@ -19,7 +19,7 @@ export class NewsService {
     }
 
     async getFirstNews(number: number){
-        const news = await this.newsRepository.findAll({order: ['id', 'DESC']})
+        const news = await this.newsRepository.findAll({order: [['id', 'DESC']]})
         const result = []
         for(let i = 0; i < number; i++){
             result.push(news[i])
