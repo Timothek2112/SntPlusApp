@@ -22,7 +22,9 @@ export class NewsService {
         const news = await this.newsRepository.findAll({order: [['id', 'DESC']]})
         const result = []
         for(let i = 0; i < number; i++){
-            result.push(news[i])
+            if(news[i] != null){
+                result.push(news[i])
+            }
         }        
         return result
     }
