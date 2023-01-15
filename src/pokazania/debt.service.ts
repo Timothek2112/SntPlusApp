@@ -163,7 +163,8 @@ export class DebtService {
         where: {
           uchastokId: dto.uchastokId,
         },
-        include: {all: true}
+        include: {all: true},
+        order: [['month', 'ASC'], ['year', 'ASC']],
       });
       console.log("Считаем показания");
     } else if (switchState == 'Payments') {
