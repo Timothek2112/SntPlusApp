@@ -5,6 +5,7 @@ https://docs.nestjs.com/providers#services
 
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { from } from 'rxjs';
 import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { Users } from 'src/getPass/models/user.model';
@@ -111,7 +112,18 @@ export class DebtService {
       if(!rate) return null;
 
       const actual = userPokazania[i];
-      const last = userPokazania[i - 1];
+      let last = userPokazania[i - 1];
+      if(last.water == 0){
+        let iter = 2;
+        while(last.water == 0) {
+          try{
+            last = userPokazania[i - iter];
+          }catch{
+            
+          }
+          iter++;
+        }
+      }
 
       if(last.water > actual.water){
         calculatedDebt.water += actual.water * rate.water;
@@ -119,6 +131,19 @@ export class DebtService {
         calculatedDebt.water += (actual.water - last.water) * rate.water;
       }
       
+      last = userPokazania[i - 1];
+      if(last.electricity == 0){
+        let iter = 2;
+        while(last.electricity == 0) {
+          try{
+            last = userPokazania[i - iter];
+          }catch{
+            
+          }
+          iter++;
+        }
+      }
+
       if(last.electricity > actual.electricity){
         calculatedDebt.electricity += actual.electricity * rate.water;
       }
