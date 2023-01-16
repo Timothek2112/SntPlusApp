@@ -5,6 +5,7 @@ https://docs.nestjs.com/providers#services
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { from } from 'rxjs';
+import { QueryTypes } from 'sequelize';
 import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { Users } from 'src/getPass/models/user.model';
@@ -26,7 +27,28 @@ export class DebtService {
     @InjectModel(Pokazania) private pokazaniaRepository: typeof Pokazania,
     @InjectModel(Payment) private paymentsRepository: typeof Payment,
     @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
-  ) {}
+  ) {
+    Pokazania.addHook('afterCreate', (pokazanie: Pokazania, options) => {
+      const dto = new getUchastokDto();
+      dto.uchastokId = pokazanie.uchastokId;
+      this.calculateNewDebt(dto);
+      this.setForFuture(pokazanie);
+    });
+
+    Pokazania.addHook('afterUpdate', (pokazanie: Pokazania, options) => {
+      const dto = new getUchastokDto();
+      dto.uchastokId = pokazanie.uchastokId;
+      this.calculateNewDebt(dto);
+      this.setForFuture(pokazanie);
+    });
+  }
+
+  async setForFuture(pokazanie: Pokazania) {
+    const futurePokazania = this.pokazaniaRepository.sequelize.query(
+      `SELECT * FROM pokazania AS p WHERE ${pokazanie.year} * 100 + ${pokazanie.month} <= p.year * 100 + p.month ORDER BY p.year ASC, p.month ASC`,
+      { type: QueryTypes.SELECT, model: Pokazania },
+    );
+  }
 
   async createRate(dto: CreateRateDto) {
     let rate = null;
@@ -103,7 +125,6 @@ export class DebtService {
         ['month', 'ASC'],
       ],
     });
-    console.log(pokazania);
     const debt: DebtDto = new DebtDto();
     let rate = await this.findRate(pokazania[0]);
     debt.water = pokazania[0].water * rate.water;

@@ -48,11 +48,8 @@ export class PokazaniaService {
           uchastokId: uchastok.uchastok,
         },
       });
-
       const uchastokDto: getUchastokDto = new getUchastokDto();
       uchastokDto.uchastokId = uchastok.uchastok;
-      await this.debtService.calculateNewDebt(uchastokDto);
-
       return dto;
     } else {
       const pokazanieDto = new CreatePokazanieDto();
@@ -81,8 +78,6 @@ export class PokazaniaService {
       await uchastok.$add('pokazania', [pokazanie.id]);
       const uchastokDto: getUchastokDto = new getUchastokDto();
       uchastokDto.uchastokId = dto.uchastokId;
-      await this.debtService.calculateNewDebt(uchastokDto);
-
       return pokazanie;
     }
   }
