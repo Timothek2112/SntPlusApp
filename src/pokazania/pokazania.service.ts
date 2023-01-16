@@ -60,17 +60,11 @@ export class PokazaniaService {
       try {
         if (dto.water == null) {
           dto.water = (
-            await this.pokazaniaRepository.findOne({
-              where: {
-                year: { [Op.lte]: dto.year },
-                month: { [Op.lt]: dto.month },
-              },
-              order: [
-                ['year', 'ASC'],
-                ['month', 'ASC'],
-              ],
-            })
-          ).water;
+            await this.pokazaniaRepository.sequelize.query(
+              `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
+              { type: QueryTypes.SELECT, model: Pokazania },
+            )
+          )[0].water;
         }
 
         if (dto.electricity == null) {
