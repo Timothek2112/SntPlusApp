@@ -8,6 +8,14 @@ export class DebtDto {
   penality: number;
   uchastokId: number;
 
+  constructor() {
+    this.water = 0;
+    this.electricity = 0;
+    this.membership = 0;
+    this.target = 0;
+    this.penality = 0;
+  }
+
   applyPayment(payment: CreatePaymentDto) {
     this.water -= payment.water;
     this.electricity -= payment.electricity;

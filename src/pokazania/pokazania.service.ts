@@ -14,11 +14,13 @@ import { DebtService } from './debt.service';
 import { GetUserDto } from 'src/getPass/dto/get-user.dto';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
+import { Op, QueryTypes } from 'sequelize';
+import sequelize from 'sequelize';
 
 @Injectable()
 export class PokazaniaService {
   constructor(
-    @InjectModel(Pokazania) private pokazania: typeof Pokazania,
+    @InjectModel(Pokazania) private pokazaniaRepository: typeof Pokazania,
     @InjectModel(Users) private userRepository: typeof Users,
     @InjectModel(Payment) private paymentRepository: typeof Payment,
     @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
@@ -31,7 +33,7 @@ export class PokazaniaService {
       where: { uchastok: dto.uchastokId },
     });
 
-    const dublicatePokazanie = await this.pokazania.findOne({
+    const dublicatePokazanie = await this.pokazaniaRepository.findOne({
       where: {
         month: dto.month,
         year: dto.year,
@@ -39,7 +41,7 @@ export class PokazaniaService {
       },
     });
     if (dublicatePokazanie) {
-      await this.pokazania.update(dto, {
+      await this.pokazaniaRepository.update(dto, {
         where: {
           month: dto.month,
           year: dto.year,
@@ -55,7 +57,33 @@ export class PokazaniaService {
     } else {
       const pokazanieDto = new CreatePokazanieDto();
       pokazanieDto.create(dto);
-      const pokazanie = await this.pokazania.create(dto);
+      try {
+        if (dto.water == null) {
+          dto.water = (
+            await this.pokazaniaRepository.findOne({
+              where: {
+                year: { [Op.lte]: dto.year },
+                month: { [Op.lt]: dto.month },
+              },
+              order: [
+                ['year', 'ASC'],
+                ['month', 'ASC'],
+              ],
+            })
+          ).water;
+        }
+
+        if (dto.electricity == null) {
+          dto.electricity = (
+            await this.pokazaniaRepository.sequelize.query(
+              `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
+              { type: QueryTypes.SELECT, model: Pokazania },
+            )
+          )[0].electricity;
+        }
+      } catch {}
+
+      const pokazanie = await this.pokazaniaRepository.create(dto);
       await uchastok.$add('pokazania', [pokazanie.id]);
       const uchastokDto: getUchastokDto = new getUchastokDto();
       uchastokDto.uchastokId = dto.uchastokId;

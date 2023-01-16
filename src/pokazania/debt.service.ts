@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /*
 https://docs.nestjs.com/providers#services
 */
@@ -48,12 +47,15 @@ export class DebtService {
   }
 
   async returnDebt(dto: getUchastokDto) {
-    const uchastok = await this.uchastkiRepository.findOne({where: {uchastok: dto.uchastokId}, include: {all: true}});
+    const uchastok = await this.uchastkiRepository.findOne({
+      where: { uchastok: dto.uchastokId },
+      include: { all: true },
+    });
     const debt = uchastok.debts[uchastok.debts.length - 1];
     return debt;
   }
 
-  //считает сколько пользователь должен на данный момент 
+  //считает сколько пользователь должен на данный момент
   public async calculateNewDebt(dto: getUchastokDto) {
     const uchastok = await this.uchastkiRepository.findOne({
       where: { uchastok: dto.uchastokId },
@@ -63,7 +65,7 @@ export class DebtService {
     if (!uchastok) return { error: 'Участка не существует' };
 
     const payments = this.calculatePaymentSum(uchastok);
-    const calculatedDebt = await this.calculateDebts(uchastok);
+    const calculatedDebt = await this.calculateDebt(uchastok.uchastok);
 
     if ('error' in calculatedDebt) return calculatedDebt;
 
@@ -93,79 +95,50 @@ export class DebtService {
   }
 
   //считает весь долг пользователя
-  async calculateDebts(uchastok: Uchastki): Promise<any> {
-    const userPokazania = uchastok.pokazania;
-    let rate = await this.findRate(userPokazania[0]);
-    const calculatedDebt: DebtDto = new DebtDto();
-    
-    if (!rate) throw new HttpException("Нет ни одного тарифа", 404);
-    
-    calculatedDebt.electricity = userPokazania[0].electricity * rate.electricity;
-    calculatedDebt.water = userPokazania[0].water * rate.water;
-    calculatedDebt.membership = userPokazania[0].membership;
-    calculatedDebt.penality = userPokazania[0].penality;
-    calculatedDebt.target = userPokazania[0].target;
-
-    for (let i = 1; i < userPokazania.length; i++) {
-      rate = await this.findRate(userPokazania[i]);
-
-      if(!rate) return null;
-
-      const actual = userPokazania[i];
-      let last = userPokazania[i - 1];
-      if(last.water == 0){
-        let iter = 2;
-        while(last.water == 0) {
-          try{
-            last = userPokazania[i - iter];
-          }catch{
-            
-          }
-          iter++;
-        }
-      }
-
-      if(last.water > actual.water){
-        calculatedDebt.water += actual.water * rate.water;
-      }else{
-        calculatedDebt.water += (actual.water - last.water) * rate.water;
-      }
-      
-      last = userPokazania[i - 1];
-      if(last.electricity == 0){
-        let iter = 2;
-        while(last.electricity == 0) {
-          try{
-            last = userPokazania[i - iter];
-          }catch{
-            
-          }
-          iter++;
-        }
-      }
-
-      if(last.electricity > actual.electricity){
-        calculatedDebt.electricity += actual.electricity * rate.water;
-      }
-      else{
-        calculatedDebt.electricity += (actual.electricity - last.electricity) * rate.electricity;
-      }
-      
-      calculatedDebt.membership += actual.membership;
-      calculatedDebt.penality += actual.penality;
-      calculatedDebt.target += actual.target;
+  async calculateDebt(uchastok: number) {
+    const pokazania = await this.pokazaniaRepository.findAll({
+      where: { uchastokId: uchastok },
+      order: [
+        ['year', 'ASC'],
+        ['month', 'ASC'],
+      ],
+    });
+    const debt: DebtDto = new DebtDto();
+    let rate = await this.findRate(pokazania[0]);
+    debt.water = pokazania[0].water * rate.water;
+    debt.electricity = pokazania[0].electricity * rate.electricity;
+    debt.membership = pokazania[0].membership;
+    debt.target = pokazania[0].target;
+    debt.penality = pokazania[0].penality;
+    for (let i = 1; i < pokazania.length; i++) {
+      rate = await this.findRate(pokazania[i]);
+      const prevWater = pokazania[i - 1];
+      const prevElectricity = pokazania[i - 1];
+      debt.water += (pokazania[i].water - prevWater.water) * rate.water;
+      debt.electricity +=
+        (pokazania[i].electricity - prevElectricity.electricity) *
+        rate.electricity;
+      debt.membership += pokazania[i].membership;
+      debt.target += pokazania[i].target;
+      debt.penality += pokazania[i].penality;
     }
-
-    return calculatedDebt;
+    return debt;
   }
 
   //Находит тариф, по которому следует считать переданное показание
   async findRate(userPokazania: Pokazania | Payment) {
-    
-    const allRates = await this.ratesRepository.findAll({order: [['id', 'DESC']]});
+    const allRates = await this.ratesRepository.findAll({
+      order: [
+        ['year', 'ASC'],
+        ['month', 'ASC'],
+      ],
+    });
 
-    for(let i = 0; i < allRates.length; i++){
-      if(userPokazania.year * 100 + userPokazania.month >= allRates[i].year * 100 + allRates[i].month){
+    for (let i = 0; i < allRates.length; i++) {
+      if (
+        userPokazania.year * 100 + userPokazania.month >=
+        allRates[i].year * 100 + allRates[i].month
+      ) {
         return allRates[i];
       }
     }
@@ -180,7 +153,7 @@ export class DebtService {
     });
     let req;
     let userForPeriod = [];
-    
+
     const result = [];
 
     if (switchState == 'Pokazania') {
@@ -188,18 +161,21 @@ export class DebtService {
         where: {
           uchastokId: dto.uchastokId,
         },
-        include: {all: true},
-        order: [['month', 'ASC'], ['year', 'ASC']],
+        include: { all: true },
+        order: [
+          ['year', 'ASC'],
+          ['month', 'ASC'],
+        ],
       });
-      console.log("Считаем показания");
+      console.log('Считаем показания');
     } else if (switchState == 'Payments') {
       req = await this.paymentsRepository.findAll({
         where: {
           uchastokId: dto.uchastokId,
         },
-        include: {all: true}
+        include: { all: true },
       });
-      console.log("Считаем оплаты");
+      console.log('Считаем оплаты');
     }
 
     userForPeriod = this.getForPeriod(
@@ -243,13 +219,15 @@ export class DebtService {
   getForPeriod(startPeriodM, endPeriodM, startPeriodY, endPeriodY, req) {
     const forPeriod = [];
     for (let i = 0; i < req.length; i++) {
-      if (startPeriodY * 100 + startPeriodM <= req[i].year * 100 + req[i].month) {
-          if (endPeriodY * 100 + endPeriodM >= req[i].year * 100 + req[i].month) {
-            forPeriod.push(req[i]);
-          }
+      if (
+        startPeriodY * 100 + startPeriodM <=
+        req[i].year * 100 + req[i].month
+      ) {
+        if (endPeriodY * 100 + endPeriodM >= req[i].year * 100 + req[i].month) {
+          forPeriod.push(req[i]);
+        }
       }
     }
     return forPeriod;
   }
 }
-
