@@ -103,6 +103,7 @@ export class DebtService {
         ['month', 'ASC'],
       ],
     });
+    console.log(pokazania);
     const debt: DebtDto = new DebtDto();
     let rate = await this.findRate(pokazania[0]);
     debt.water = pokazania[0].water * rate.water;
