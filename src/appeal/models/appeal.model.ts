@@ -3,10 +3,12 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Users } from 'src/getPass/models/user.model';
+import { answer } from './answer.model';
 
 export class AppealCreationArgs {
   theme: string;
@@ -42,4 +44,7 @@ export class appeal extends Model<appeal, AppealCreationArgs> {
 
   @Column({ type: DataType.BOOLEAN })
   isActual: boolean;
+
+  @HasOne(() => answer)
+  thisAnswer: answer;
 }

@@ -8,9 +8,10 @@ https://docs.nestjs.com/modules
 
 import { Module } from '@nestjs/common';
 import { appeal } from './models/appeal.model';
+import { answer } from './models/answer.model';
 
 @Module({
-  imports: [SequelizeModule.forFeature([appeal, Users])],
+  imports: [SequelizeModule.forFeature([appeal, Users, answer])],
   controllers: [AppealController],
   providers: [AppealService],
 })

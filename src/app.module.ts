@@ -17,6 +17,7 @@ import { Payment } from './pokazania/models/payments.model';
 import { Uchastki } from './getPass/models/uchastki.model';
 import { appeal } from './appeal/models/appeal.model';
 import { News } from './news/models/News.model';
+import { answer } from './appeal/models/answer.model';
 @Module({
   imports: [
     AppealModule,
@@ -42,6 +43,7 @@ import { News } from './news/models/News.model';
         Uchastki,
         News,
         appeal,
+        answer,
       ],
       autoLoadModels: true,
       dialectOptions: {},

@@ -7,13 +7,15 @@ import { InjectModel } from '@nestjs/sequelize';
 import { appeal } from './models/appeal.model';
 import { appealCreationDto } from './dto/appeal.dto';
 import { Users } from './../getPass/models/user.model';
-import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
+import { answerCreationDto } from './dto/answer.dto';
+import { answer } from './models/answer.model';
 
 @Injectable()
 export class AppealService {
   constructor(
     @InjectModel(appeal) private appealRepository: typeof appeal,
     @InjectModel(Users) private usersRepository: typeof Users,
+    @InjectModel(answer) private answerRepository: typeof answer,
   ) {}
 
   async createAppeal(dto: appealCreationDto) {
@@ -31,6 +33,32 @@ export class AppealService {
   }
 
   async getAppealForId(id: number) {
-    return await this.appealRepository.findAll({ where: { userId: id } });
+    const appeals = await this.appealRepository.findAll({
+      where: { userId: id },
+      include: { all: true },
+    });
+    const result = [];
+
+    appeals.forEach((appeal) => {
+      const hasAnswer = appeal.thisAnswer == null ? false : true;
+      result.push({
+        theme: appeal.theme,
+        mainText: appeal.text,
+        date: appeal.date,
+        answer: appeal.thisAnswer != null ? appeal.thisAnswer.text : '',
+        answerDate: appeal.thisAnswer != null ? appeal.thisAnswer.date : '',
+        status: hasAnswer,
+      });
+    });
+    return result;
+  }
+
+  async CreateAnswer(dto: answerCreationDto) {
+    const newAnswer = await this.answerRepository.create(dto);
+    const appealForAnswer = await this.appealRepository.findOne({
+      where: { id: dto.appealId },
+    });
+    appealForAnswer.$set('thisAnswer', [newAnswer.id]);
+    return newAnswer;
   }
 }
