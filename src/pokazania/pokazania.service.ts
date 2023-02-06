@@ -11,11 +11,9 @@ import { Payment } from './models/payments.model';
 import { Pokazania } from './models/pokazania.model';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { DebtService } from './debt.service';
-import { GetUserDto } from 'src/getPass/dto/get-user.dto';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
-import { Op, QueryTypes } from 'sequelize';
-import sequelize from 'sequelize';
+import { QueryTypes } from 'sequelize';
 
 @Injectable()
 export class PokazaniaService {
@@ -32,6 +30,7 @@ export class PokazaniaService {
     const uchastok = await this.uchastkiRepository.findOne({
       where: { uchastok: dto.uchastokId },
     });
+    const today = new Date();
 
     const dublicatePokazanie = await this.pokazaniaRepository.findOne({
       where: {
@@ -40,45 +39,64 @@ export class PokazaniaService {
         uchastokId: uchastok.uchastok,
       },
     });
-    if (dublicatePokazanie) {
-      await this.pokazaniaRepository.update(dto, {
-        where: {
-          month: dto.month,
-          year: dto.year,
-          uchastokId: uchastok.uchastok,
-        },
-      });
-      const uchastokDto: getUchastokDto = new getUchastokDto();
-      uchastokDto.uchastokId = uchastok.uchastok;
-      return dto;
+
+    // Обновлять показания можно только за тот же месяц и только в период между
+    // 20 и 31 числом месяца
+    if (
+      today.getMonth() + 1 == dto.month &&
+      today.getDate() >= 20 &&
+      today.getDate() <= 31 &&
+      today.getFullYear() + '' == '20' + dto.year
+    ) {
+      if (dublicatePokazanie) {
+        await this.pokazaniaRepository.update(dto, {
+          where: {
+            month: dto.month,
+            year: dto.year,
+            uchastokId: uchastok.uchastok,
+          },
+        });
+
+        const uchastokDto: getUchastokDto = new getUchastokDto();
+        uchastokDto.uchastokId = uchastok.uchastok;
+
+        return dto;
+      } else {
+        const pokazanieDto = new CreatePokazanieDto();
+        pokazanieDto.create(dto);
+
+        try {
+          if (dto.water == null) {
+            dto.water = (
+              await this.pokazaniaRepository.sequelize.query(
+                `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
+                { type: QueryTypes.SELECT, model: Pokazania },
+              )
+            )[0].water;
+          }
+
+          if (dto.electricity == null) {
+            dto.electricity = (
+              await this.pokazaniaRepository.sequelize.query(
+                `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
+                { type: QueryTypes.SELECT, model: Pokazania },
+              )
+            )[0].electricity;
+          }
+        } catch {}
+
+        const pokazanie = await this.pokazaniaRepository.create(dto);
+        await uchastok.$add('pokazania', [pokazanie.id]);
+        const uchastokDto: getUchastokDto = new getUchastokDto();
+        uchastokDto.uchastokId = dto.uchastokId;
+        return pokazanie;
+      }
     } else {
-      const pokazanieDto = new CreatePokazanieDto();
-      pokazanieDto.create(dto);
-      try {
-        if (dto.water == null) {
-          dto.water = (
-            await this.pokazaniaRepository.sequelize.query(
-              `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
-              { type: QueryTypes.SELECT, model: Pokazania },
-            )
-          )[0].water;
-        }
-
-        if (dto.electricity == null) {
-          dto.electricity = (
-            await this.pokazaniaRepository.sequelize.query(
-              `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
-              { type: QueryTypes.SELECT, model: Pokazania },
-            )
-          )[0].electricity;
-        }
-      } catch {}
-
-      const pokazanie = await this.pokazaniaRepository.create(dto);
-      await uchastok.$add('pokazania', [pokazanie.id]);
-      const uchastokDto: getUchastokDto = new getUchastokDto();
-      uchastokDto.uchastokId = dto.uchastokId;
-      return pokazanie;
+      return {
+        error: 'Out of date',
+        message:
+          'Подавать показания можно только за текущий месяц с 20 числа и до конца месяца',
+      };
     }
   }
 

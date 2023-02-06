@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /*
 https://docs.nestjs.com/providers#services
 */
 
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { from } from 'rxjs';
 import { QueryTypes } from 'sequelize';
 import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
@@ -40,6 +40,18 @@ export class DebtService {
       dto.uchastokId = pokazanie.uchastokId;
       this.calculateNewDebt(dto);
       this.setForFuture(pokazanie);
+    });
+
+    Payment.addHook('afterUpdate', (payment: Payment, options) => {
+      const dto = new getUchastokDto();
+      dto.uchastokId = payment.uchastokId;
+      this.calculateNewDebt(dto);
+    });
+
+    Payment.addHook('afterCreate', (payment: Payment, options) => {
+      const dto = new getUchastokDto();
+      dto.uchastokId = payment.uchastokId;
+      this.calculateNewDebt(dto);
     });
   }
 
@@ -169,10 +181,6 @@ export class DebtService {
 
   //Возвращает показания или оплаты за заданный период
   async returnForPeriod(dto: PeriodDto, switchState: string) {
-    const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId },
-      include: { all: true },
-    });
     let req;
     let userForPeriod = [];
 
@@ -207,8 +215,6 @@ export class DebtService {
       dto.endPeriodY,
       req,
     );
-
-    const rates: Rates[] = await this.getRatesForPeriod(dto);
 
     for (let i = 0; i < userForPeriod.length; i++) {
       const unit = userForPeriod[i];

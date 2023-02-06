@@ -2,10 +2,9 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
-import { GetUserDto } from '../getPass/dto/get-user.dto';
 import { DebtService } from './debt.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { CreatePokazanieDto } from './dto/create-pokazanie.dto';

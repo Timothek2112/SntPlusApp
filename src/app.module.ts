@@ -18,6 +18,8 @@ import { Uchastki } from './getPass/models/uchastki.model';
 import { appeal } from './appeal/models/appeal.model';
 import { News } from './news/models/News.model';
 import { answer } from './appeal/models/answer.model';
+import { ScheduleModule } from '@nestjs/schedule';
+
 @Module({
   imports: [
     AppealModule,
@@ -26,6 +28,7 @@ import { answer } from './appeal/models/answer.model';
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
+    ScheduleModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,

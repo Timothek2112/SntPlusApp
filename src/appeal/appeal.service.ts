@@ -46,7 +46,8 @@ export class AppealService {
         mainText: appeal.text,
         date: appeal.date,
         answer: appeal.thisAnswer != null ? appeal.thisAnswer.text : '',
-        answerDate: appeal.thisAnswer != null ? appeal.thisAnswer.date : Date.now,
+        answerDate:
+          appeal.thisAnswer != null ? appeal.thisAnswer.date : Date.now,
         status: hasAnswer,
       });
     });
