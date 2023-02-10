@@ -1,3 +1,5 @@
+import { SheduleModule } from './shedule/shedule.module';
+import { SheduleController } from './shedule/shedule.controller';
 import { AppealModule } from './appeal/appeal.module';
 import { NewsModule } from './news/news.module';
 import { PokazaniaModule } from './pokazania/pokazania.module';
@@ -22,6 +24,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    SheduleModule,
     AppealModule,
     NewsModule,
     PokazaniaModule,
@@ -55,7 +58,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     RolesModule,
     AuthModule,
   ],
-  controllers: [PokazaniaController],
+  controllers: [
+    SheduleController, PokazaniaController],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
