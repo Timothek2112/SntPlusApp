@@ -11,6 +11,7 @@ import {
 import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { Users } from 'src/getPass/models/user.model';
 import { DebtService } from '../debt.service';
+import { SNT } from 'src/snt/model/snt.model';
 
 interface PaymentCreationAttrs {
   water: number;
@@ -58,4 +59,11 @@ export class Payment extends Model<Payment, PaymentCreationAttrs> {
 
   @BelongsTo(() => Uchastki)
   uchastok: Uchastki;
+
+  @BelongsTo(() => SNT)
+  SNT: SNT;
+
+  @ForeignKey(() => SNT)
+  @Column({ type: DataType.INTEGER })
+  SntId: number;
 }

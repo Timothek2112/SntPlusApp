@@ -3,4 +3,5 @@ export class appealCreationDto {
   text: string;
   date: Date;
   userId: number;
+  SntId: number;
 }

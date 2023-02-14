@@ -28,7 +28,7 @@ export class PokazaniaService {
 
   async createPokazanie(dto: CreatePokazanieDto) {
     const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId },
+      where: { uchastok: dto.uchastokId, SntId: dto.SntId },
     });
     const today = new Date();
 
@@ -37,6 +37,7 @@ export class PokazaniaService {
         month: dto.month,
         year: dto.year,
         uchastokId: uchastok.uchastok,
+        SntId: dto.SntId,
       },
     });
 
@@ -54,6 +55,7 @@ export class PokazaniaService {
             month: dto.month,
             year: dto.year,
             uchastokId: uchastok.uchastok,
+            SntId: dto.SntId,
           },
         });
 
@@ -69,7 +71,7 @@ export class PokazaniaService {
           if (dto.water == null) {
             dto.water = (
               await this.pokazaniaRepository.sequelize.query(
-                `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
+                `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} AND p.SntId = ${dto.SntId} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
                 { type: QueryTypes.SELECT, model: Pokazania },
               )
             )[0].water;
@@ -78,7 +80,7 @@ export class PokazaniaService {
           if (dto.electricity == null) {
             dto.electricity = (
               await this.pokazaniaRepository.sequelize.query(
-                `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
+                `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} AND p.SntId = ${dto.SntId} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
                 { type: QueryTypes.SELECT, model: Pokazania },
               )
             )[0].electricity;
@@ -102,7 +104,7 @@ export class PokazaniaService {
 
   async createPayment(dto: CreatePaymentDto) {
     const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId },
+      where: { uchastok: dto.uchastokId, SntId: dto.SntId },
       include: { all: true },
     });
     const dublicatePayment = await this.paymentRepository.findOne({
@@ -110,6 +112,7 @@ export class PokazaniaService {
         month: dto.month,
         year: dto.year,
         uchastokId: uchastok.uchastok,
+        SntId: dto.SntId,
       },
     });
 
@@ -119,6 +122,7 @@ export class PokazaniaService {
           month: dto.month,
           year: dto.year,
           uchastokId: uchastok.uchastok,
+          SntId: dto.SntId,
         },
       });
 

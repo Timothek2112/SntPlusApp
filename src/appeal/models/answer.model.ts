@@ -4,8 +4,10 @@ import {
   ForeignKey,
   Model,
   Table,
+  BelongsTo
 } from 'sequelize-typescript';
 import { appeal } from './appeal.model';
+import { SNT } from 'src/snt/model/snt.model';
 
 export class AnswerCreationArgs {
   text: string;
@@ -30,5 +32,13 @@ export class answer extends Model<answer, AnswerCreationArgs> {
   date: Date;
 
   @ForeignKey(() => appeal)
+  @Column({ type: DataType.INTEGER })
   appealId: number;
+
+  @BelongsTo(() => SNT)
+  SNT: SNT;
+
+  @ForeignKey(() => SNT)
+  @Column({ type: DataType.INTEGER })
+  SntId: number;
 }

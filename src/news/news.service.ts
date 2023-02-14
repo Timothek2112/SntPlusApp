@@ -29,7 +29,7 @@ export class NewsService {
         return result
     }
 
-    async getAllNews(){
-        return await this.newsRepository.findAll();
+    async getAllNews(snt: number){
+        return await this.newsRepository.findAll({ where: { SntId: snt }});
     }
  }

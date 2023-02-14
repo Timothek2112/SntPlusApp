@@ -28,6 +28,7 @@ import { PatchUserDto } from 'src/auth/dto/patch-user.dto';
 @Controller('/get-pass')
 export class GetPassController {
   constructor(private getPassService: GetPassService) {}
+  
   @ApiOperation({ summary: 'Создание пользователя' })
   @ApiResponse({ status: 201, type: Users })
   @Post()

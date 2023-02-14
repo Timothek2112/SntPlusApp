@@ -10,9 +10,9 @@ import { NewsService } from './news.service';
 @Controller('news')
 export class NewsController {
     constructor(private newsService: NewsService) {}
-    @Get('/all')
-    async getAllNews(){
-        return this.newsService.getAllNews();
+    @Get('/all/:snt')
+    async getAllNews(@Param('snt') snt: number) {
+        return this.newsService.getAllNews(snt);
     }
 
     @Post()

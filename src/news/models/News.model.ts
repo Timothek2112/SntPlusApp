@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table, BelongsTo, ForeignKey } from 'sequelize-typescript';
+import { SNT } from 'src/snt/model/snt.model';
 
 export class NewsCreationArgs {
   title: string;
@@ -24,4 +25,11 @@ export class News extends Model<News, NewsCreationArgs> {
 
   @Column({ type: DataType.DATE })
   date: Date;
+
+  @BelongsTo(() => SNT)
+  SNT: SNT;
+
+  @ForeignKey(() => SNT)
+  @Column({ type: DataType.INTEGER })
+  SntId: number;
 }

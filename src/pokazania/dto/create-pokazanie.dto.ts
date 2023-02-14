@@ -8,6 +8,7 @@ export class CreatePokazanieDto {
   month: number;
   year: number;
   isNewCounter?: boolean = false;
+  readonly SntId: number;
 
   constructor() {
     this.water = 0;

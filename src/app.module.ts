@@ -1,3 +1,4 @@
+import { SntModule } from './snt/snt.module';
 import { SheduleModule } from './shedule/shedule.module';
 import { SheduleController } from './shedule/shedule.controller';
 import { AppealModule } from './appeal/appeal.module';
@@ -21,13 +22,16 @@ import { appeal } from './appeal/models/appeal.model';
 import { News } from './news/models/News.model';
 import { answer } from './appeal/models/answer.model';
 import { ScheduleModule } from '@nestjs/schedule';
+import { SNT } from './snt/model/snt.model';
 
 @Module({
   imports: [
+    SntModule,
     SheduleModule,
     AppealModule,
     NewsModule,
     PokazaniaModule,
+    SntModule,
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
@@ -40,6 +44,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       password: String(process.env.POSTGRES_PASSWORD),
       database: process.env.POSTGRES_DB,
       models: [
+        SNT,
         Users,
         Role,
         UserRoles,

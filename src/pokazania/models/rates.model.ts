@@ -1,5 +1,7 @@
 import { Model } from 'sequelize-typescript';
-import { Column, DataType, Table } from 'sequelize-typescript';
+import { Column, DataType, Table, BelongsTo, ForeignKey } from 'sequelize-typescript';
+import { SNT } from 'src/snt/model/snt.model';
+
 
 interface RatesCreationAttrs {
   water: number;
@@ -21,4 +23,11 @@ export class Rates extends Model<Rates, RatesCreationAttrs> {
 
   @Column({ type: DataType.INTEGER })
   year: number;
+
+  @BelongsTo(() => SNT)
+  SNT: SNT;
+
+  @ForeignKey(() => SNT)
+  @Column({ type: DataType.INTEGER })
+  SntId: number;
 }

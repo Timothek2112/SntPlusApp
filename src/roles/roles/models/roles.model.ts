@@ -10,6 +10,7 @@ import {
 } from 'sequelize-typescript';
 import { Users } from 'src/getPass/models/user.model';
 import { UserRoles } from 'src/getPass/models/user_roles.model';
+import { SNT } from 'src/snt/model/snt.model';
 
 interface RoleCreationAttrs {
   role: string;

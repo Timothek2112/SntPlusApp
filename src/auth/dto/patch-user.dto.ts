@@ -3,4 +3,5 @@ export class PatchUserDto {
   readonly surname?: string;
   readonly uchastok?: number;
   readonly role?: number;
+  readonly SntId?: number;
 }

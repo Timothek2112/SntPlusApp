@@ -10,14 +10,11 @@ import { Pokazania } from 'src/pokazania/models/pokazania.model';
 
 @Injectable()
 export class SheduleService {
-    constructor(
-        @InjectModel(Pokazania)
-    ) {}
+  constructor(
+    @InjectModel(Pokazania) private pokazaniaRepository: typeof Pokazania,
+  ) {}
 
   @Cron('0 0 0 * * *')
   PenalityCron() {
-    sequelize.Transaction(async (t) => {
-        
-    })
   }
 }

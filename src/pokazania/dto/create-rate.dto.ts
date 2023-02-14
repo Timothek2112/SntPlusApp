@@ -3,4 +3,5 @@ export class CreateRateDto {
   readonly electricity: number;
   readonly month: number;
   readonly year: number;
+  readonly SntId: number;
 }

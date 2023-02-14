@@ -12,6 +12,7 @@ import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { Users } from '../../getPass/models/user.model';
 import { DebtService } from '../debt.service';
 import { Rates } from './rates.model';
+import { SNT } from 'src/snt/model/snt.model';
 
 interface PokazaniaCreationAttr {
   water: number;
@@ -61,4 +62,11 @@ export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
 
   @BelongsTo(() => Uchastki)
   uchastok: Uchastki;
+
+  @BelongsTo(() => SNT)
+  SNT: SNT;
+
+  @ForeignKey(() => SNT)
+  @Column({ type: DataType.INTEGER })
+  SntId: number;
 }

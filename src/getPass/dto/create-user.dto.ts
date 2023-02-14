@@ -20,4 +20,6 @@ export class CreateUserDto {
     description: 'Номер участка владельца аккаунта',
   })
   readonly uchastok?: number;
+
+  readonly SntId: number;
 }

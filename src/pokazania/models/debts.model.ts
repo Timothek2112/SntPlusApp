@@ -8,6 +8,7 @@ import {
 } from 'sequelize-typescript';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { Users } from 'src/getPass/models/user.model';
+import { SNT } from 'src/snt/model/snt.model';
 
 interface DebtCreationAttrs {
   water: number;
@@ -47,4 +48,11 @@ export class Debts extends Model<Debts, DebtCreationAttrs> {
 
   @BelongsTo(() => Uchastki)
   uchastok: Uchastki;
+
+  @BelongsTo(() => SNT)
+  SNT: SNT;
+
+  @ForeignKey(() => SNT)
+  @Column({ type: DataType.INTEGER })
+  SntId: number;
 }

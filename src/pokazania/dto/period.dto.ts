@@ -4,4 +4,5 @@ export class PeriodDto {
   readonly startPeriodY: number;
   readonly endPeriodY: number;
   readonly uchastokId: number;
+  readonly SntId: number;
 }

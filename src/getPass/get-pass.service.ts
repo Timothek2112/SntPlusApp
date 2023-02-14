@@ -91,7 +91,7 @@ export class GetPassService {
     });
 
     const uchastok = await this.uchastkiRepository.create(dto);
-    await user.$add('uchastki', [uchastok.uchastok]);
+    await user.$add('uchastki', [uchastok.id]);
     return uchastok;
   }
 }

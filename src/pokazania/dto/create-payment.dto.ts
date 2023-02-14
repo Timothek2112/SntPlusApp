@@ -7,6 +7,8 @@ export class CreatePaymentDto {
   target: number;
   penality: number;
   uchastokId: number;
+  readonly SntId: number;
+
 
   constructor() {
     this.water = 0;

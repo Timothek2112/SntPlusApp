@@ -9,12 +9,14 @@ import {
 } from 'sequelize-typescript';
 import { Users } from 'src/getPass/models/user.model';
 import { answer } from './answer.model';
+import { SNT } from 'src/snt/model/snt.model';
 
 export class AppealCreationArgs {
   theme: string;
   text: string;
   date: Date;
   userId: number;
+  sntId: number;
 }
 
 @Table({ tableName: 'appeal' })
@@ -47,4 +49,11 @@ export class appeal extends Model<appeal, AppealCreationArgs> {
 
   @HasOne(() => answer)
   thisAnswer: answer;
+
+  @BelongsTo(() => SNT)
+  SNT: SNT;
+
+  @ForeignKey(() => SNT)
+  @Column({ type: DataType.INTEGER })
+  SntId: number;
 }

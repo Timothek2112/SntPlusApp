@@ -32,14 +32,12 @@ export class DebtService {
       const dto = new getUchastokDto();
       dto.uchastokId = pokazanie.uchastokId;
       this.calculateNewDebt(dto);
-      this.setForFuture(pokazanie);
     });
 
     Pokazania.addHook('afterUpdate', (pokazanie: Pokazania, options) => {
       const dto = new getUchastokDto();
       dto.uchastokId = pokazanie.uchastokId;
       this.calculateNewDebt(dto);
-      this.setForFuture(pokazanie);
     });
 
     Payment.addHook('afterUpdate', (payment: Payment, options) => {
@@ -55,24 +53,17 @@ export class DebtService {
     });
   }
 
-  async setForFuture(pokazanie: Pokazania) {
-    const futurePokazania = await this.pokazaniaRepository.sequelize.query(
-      `SELECT * FROM pokazania AS p WHERE ${pokazanie.year} * 100 + ${pokazanie.month} <= p.year * 100 + p.month ORDER BY p.year ASC, p.month ASC`,
-      { type: QueryTypes.SELECT, model: Pokazania },
-    );
-  }
-
   async createRate(dto: CreateRateDto) {
     let rate = null;
     const month = dto.month;
     const year = dto.year;
     const dublicatedRate = await this.ratesRepository.findOne({
-      where: { month: month, year: year },
+      where: { month: month, year: year, SntId: dto.SntId },
       include: { all: true },
     });
 
     if (dublicatedRate) {
-      await this.ratesRepository.update(dto, { where: { month, year } });
+      await this.ratesRepository.update(dto, { where: { month, year, SntId: dto.SntId } });
       return dublicatedRate;
     } else {
       rate = await this.ratesRepository.create(dto);
@@ -82,7 +73,7 @@ export class DebtService {
 
   async returnDebt(dto: getUchastokDto) {
     const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId },
+      where: { uchastok: dto.uchastokId, SntId: dto.SntId },
       include: { all: true },
     });
     const debt = uchastok.debts[uchastok.debts.length - 1];
@@ -92,14 +83,14 @@ export class DebtService {
   //считает сколько пользователь должен на данный момент
   public async calculateNewDebt(dto: getUchastokDto) {
     const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId },
+      where: { uchastok: dto.uchastokId, SntId: dto.SntId },
       include: { all: true },
     });
 
     if (!uchastok) return { error: 'Участка не существует' };
 
     const payments = this.calculatePaymentSum(uchastok);
-    const calculatedDebt = await this.calculateDebt(uchastok.uchastok);
+    const calculatedDebt = await this.calculateDebt(uchastok.uchastok, uchastok.SntId);
 
     if ('error' in calculatedDebt) return calculatedDebt;
 
@@ -129,9 +120,9 @@ export class DebtService {
   }
 
   //считает весь долг пользователя
-  async calculateDebt(uchastok: number) {
+  async calculateDebt(uchastok: number, SntId: number) {
     const pokazania = await this.pokazaniaRepository.findAll({
-      where: { uchastokId: uchastok },
+      where: { uchastokId: uchastok, SntId: SntId },
       order: [
         ['year', 'ASC'],
         ['month', 'ASC'],
@@ -162,6 +153,7 @@ export class DebtService {
   //Находит тариф, по которому следует считать переданное показание
   async findRate(userPokazania: Pokazania | Payment) {
     const allRates = await this.ratesRepository.findAll({
+      where: { SntId: userPokazania.SntId },
       order: [
         ['year', 'ASC'],
         ['month', 'ASC'],
@@ -190,6 +182,7 @@ export class DebtService {
       req = await this.pokazaniaRepository.findAll({
         where: {
           uchastokId: dto.uchastokId,
+          SntId: dto.SntId,
         },
         include: { all: true },
         order: [
@@ -202,6 +195,7 @@ export class DebtService {
       req = await this.paymentsRepository.findAll({
         where: {
           uchastokId: dto.uchastokId,
+          SntId: dto.SntId,
         },
         include: { all: true },
       });
@@ -233,7 +227,7 @@ export class DebtService {
 
   //Возвращает ставки за период
   async getRatesForPeriod(dto: PeriodDto) {
-    const rates = await this.ratesRepository.findAll();
+    const rates = await this.ratesRepository.findAll({ where: {SntId: dto.SntId }});
     return this.getForPeriod(
       dto.startPeriodM,
       dto.endPeriodM,

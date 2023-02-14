@@ -15,6 +15,7 @@ import { Pokazania } from '../../pokazania/models/pokazania.model';
 import { Role } from '../../roles/roles/models/roles.model';
 import { Uchastki } from './uchastki.model';
 import { appeal } from 'src/appeal/models/appeal.model';
+import { SNT } from 'src/snt/model/snt.model';
 
 interface UserCreationAttrs {
   login: string;
@@ -44,6 +45,7 @@ export class Users extends Model<Users, UserCreationAttrs> {
   })
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   login: string;
+
   @ApiProperty({
     example: 'examplePassword',
     description: 'Пароль пользователя',
@@ -73,6 +75,13 @@ export class Users extends Model<Users, UserCreationAttrs> {
 
   @ForeignKey(() => Role)
   roleId: number;
+
+  @BelongsTo(() => SNT)
+  SNT: SNT;
+
+  @ForeignKey(() => SNT)
+  @Column({ type: DataType.INTEGER })
+  SntId: number;
 
   @HasMany(() => appeal)
   appeals: appeal[];
