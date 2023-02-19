@@ -76,9 +76,6 @@ export class Users extends Model<Users, UserCreationAttrs> {
   @ForeignKey(() => Role)
   roleId: number;
 
-  @BelongsTo(() => SNT)
-  SNT: SNT;
-
   @ForeignKey(() => SNT)
   @Column({ type: DataType.INTEGER })
   SntId: number;

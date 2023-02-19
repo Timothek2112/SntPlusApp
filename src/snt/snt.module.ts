@@ -5,10 +5,8 @@ import { Module } from '@nestjs/common';
 import { SNT } from './model/snt.model';
 
 @Module({
-    imports: [SequelizeModule.forFeature([SNT])],
-    controllers: [
-        SntController,],
-    providers: [
-        SntService,],
+  imports: [SequelizeModule.forFeature([SNT])],
+  controllers: [SntController],
+  providers: [SntService],
 })
-export class SntModule { }
+export class SntModule {}

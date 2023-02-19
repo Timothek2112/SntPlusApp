@@ -35,9 +35,6 @@ export class answer extends Model<answer, AnswerCreationArgs> {
   @Column({ type: DataType.INTEGER })
   appealId: number;
 
-  @BelongsTo(() => SNT)
-  SNT: SNT;
-
   @ForeignKey(() => SNT)
   @Column({ type: DataType.INTEGER })
   SntId: number;

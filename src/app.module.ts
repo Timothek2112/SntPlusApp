@@ -1,3 +1,4 @@
+import { LoggerModule } from './logger/logger.module';
 import { SntModule } from './snt/snt.module';
 import { SheduleModule } from './shedule/shedule.module';
 import { SheduleController } from './shedule/shedule.controller';
@@ -23,9 +24,11 @@ import { News } from './news/models/News.model';
 import { answer } from './appeal/models/answer.model';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SNT } from './snt/model/snt.model';
+import { Rates } from './pokazania/models/rates.model';
 
 @Module({
   imports: [
+    LoggerModule,
     SntModule,
     SheduleModule,
     AppealModule,
@@ -44,6 +47,7 @@ import { SNT } from './snt/model/snt.model';
       password: String(process.env.POSTGRES_PASSWORD),
       database: process.env.POSTGRES_DB,
       models: [
+        Rates,
         SNT,
         Users,
         Role,
@@ -63,8 +67,7 @@ import { SNT } from './snt/model/snt.model';
     RolesModule,
     AuthModule,
   ],
-  controllers: [
-    SheduleController, PokazaniaController],
+  controllers: [SheduleController, PokazaniaController],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

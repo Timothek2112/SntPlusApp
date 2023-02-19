@@ -1,8 +1,8 @@
 export class PeriodDto {
-  readonly startPeriodM: number;
-  readonly endPeriodM: number;
-  readonly startPeriodY: number;
-  readonly endPeriodY: number;
-  readonly uchastokId: number;
-  readonly SntId: number;
+  startPeriodM: number;
+  endPeriodM: number;
+  startPeriodY: number;
+  endPeriodY: number;
+  uchastokId: number;
+  SntId: number;
 }

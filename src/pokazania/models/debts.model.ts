@@ -49,9 +49,6 @@ export class Debts extends Model<Debts, DebtCreationAttrs> {
   @BelongsTo(() => Uchastki)
   uchastok: Uchastki;
 
-  @BelongsTo(() => SNT)
-  SNT: SNT;
-
   @ForeignKey(() => SNT)
   @Column({ type: DataType.INTEGER })
   SntId: number;

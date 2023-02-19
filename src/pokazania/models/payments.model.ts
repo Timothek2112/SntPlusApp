@@ -60,9 +60,6 @@ export class Payment extends Model<Payment, PaymentCreationAttrs> {
   @BelongsTo(() => Uchastki)
   uchastok: Uchastki;
 
-  @BelongsTo(() => SNT)
-  SNT: SNT;
-
   @ForeignKey(() => SNT)
   @Column({ type: DataType.INTEGER })
   SntId: number;

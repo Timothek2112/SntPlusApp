@@ -26,8 +26,7 @@ export class News extends Model<News, NewsCreationArgs> {
   @Column({ type: DataType.DATE })
   date: Date;
 
-  @BelongsTo(() => SNT)
-  SNT: SNT;
+
 
   @ForeignKey(() => SNT)
   @Column({ type: DataType.INTEGER })

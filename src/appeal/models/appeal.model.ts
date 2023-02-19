@@ -50,8 +50,7 @@ export class appeal extends Model<appeal, AppealCreationArgs> {
   @HasOne(() => answer)
   thisAnswer: answer;
 
-  @BelongsTo(() => SNT)
-  SNT: SNT;
+
 
   @ForeignKey(() => SNT)
   @Column({ type: DataType.INTEGER })

@@ -28,7 +28,7 @@ export class PokazaniaService {
 
   async createPokazanie(dto: CreatePokazanieDto) {
     const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId, SntId: dto.SntId },
+      where: { id: dto.uchastokId, SntId: dto.SntId },
     });
     const today = new Date();
 
@@ -36,7 +36,7 @@ export class PokazaniaService {
       where: {
         month: dto.month,
         year: dto.year,
-        uchastokId: uchastok.uchastok,
+        uchastokId: uchastok.id,
         SntId: dto.SntId,
       },
     });
@@ -45,73 +45,66 @@ export class PokazaniaService {
     // 20 и 31 числом месяца
     if (
       //today.getMonth() + 1 == dto.month && Раскомментировать на релизе
-      today.getDate() >= 1 && // TODO: Поменять единицу на 20 на релизе
-      today.getDate() <= 31 &&
-      today.getFullYear() + '' == '20' + dto.year
+      today.getDate() <= 1 && // TODO: Поменять единицу на 20 на релизе
+      today.getDate() >= 31 && // Переделать эту хуиту чтобы для каждого снт можно было устанавливать эти значения
+      today.getFullYear() + '' != '20' + dto.year
     ) {
-      if (dublicatePokazanie) {
-        await this.pokazaniaRepository.update(dto, {
-          where: {
-            month: dto.month,
-            year: dto.year,
-            uchastokId: uchastok.uchastok,
-            SntId: dto.SntId,
-          },
-        });
-
-        const uchastokDto: getUchastokDto = new getUchastokDto();
-        uchastokDto.uchastokId = uchastok.uchastok;
-
-        return dto;
-      } else {
-        const pokazanieDto = new CreatePokazanieDto();
-        pokazanieDto.create(dto);
-
-        try {
-          if (dto.water == null) {
-            dto.water = (
-              await this.pokazaniaRepository.sequelize.query(
-                `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} AND p.SntId = ${dto.SntId} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
-                { type: QueryTypes.SELECT, model: Pokazania },
-              )
-            )[0].water;
-          }
-
-          if (dto.electricity == null) {
-            dto.electricity = (
-              await this.pokazaniaRepository.sequelize.query(
-                `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} AND p.SntId = ${dto.SntId} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
-                { type: QueryTypes.SELECT, model: Pokazania },
-              )
-            )[0].electricity;
-          }
-        } catch {}
-
-        const pokazanie = await this.pokazaniaRepository.create(dto);
-        await uchastok.$add('pokazania', [pokazanie.id]);
-        const uchastokDto: getUchastokDto = new getUchastokDto();
-        uchastokDto.uchastokId = dto.uchastokId;
-        return pokazanie;
-      }
-    } else {
       return {
         error: 'Out of date',
         message:
           'Подавать показания можно только за текущий месяц с 20 числа и до конца месяца',
       };
     }
+
+    if (dublicatePokazanie) {
+      await this.pokazaniaRepository.update(dto, {
+        where: {
+          month: dto.month,
+          year: dto.year,
+          uchastokId: uchastok.id,
+          SntId: dto.SntId,
+        },
+      });
+
+      return dto;
+    } else {
+      try {
+        if (!dto.water) {
+          dto.water = (
+            await this.pokazaniaRepository.sequelize.query(
+              `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} AND p."SntId" = ${dto.SntId} AND p."uchastokId" = ${dto.uchastokId} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
+              { type: QueryTypes.SELECT, model: Pokazania },
+            )
+          )[0].water;
+        }
+        if (!dto.electricity) {
+          dto.electricity = (
+            await this.pokazaniaRepository.sequelize.query(
+              `SELECT * FROM pokazania as p WHERE p.year * 100 + p.month < ${dto.year} * 100 + ${dto.month} AND p."SntId" = ${dto.SntId} AND p."uchastokId" = ${dto.uchastokId} ORDER BY p.year DESC, p.month DESC LIMIT 1`,
+              { type: QueryTypes.SELECT, model: Pokazania },
+            )
+          )[0].electricity;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      const pokazanie = await this.pokazaniaRepository.create(dto);
+      await uchastok.$add('pokazania', [pokazanie.id]);
+
+      return pokazanie;
+    }
   }
 
   async createPayment(dto: CreatePaymentDto) {
     const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId, SntId: dto.SntId },
+      where: { id: dto.uchastokId, SntId: dto.SntId },
       include: { all: true },
     });
     const dublicatePayment = await this.paymentRepository.findOne({
       where: {
         month: dto.month,
         year: dto.year,
-        uchastokId: uchastok.uchastok,
+        uchastokId: uchastok.id,
         SntId: dto.SntId,
       },
     });
@@ -121,13 +114,15 @@ export class PokazaniaService {
         where: {
           month: dto.month,
           year: dto.year,
-          uchastokId: uchastok.uchastok,
+          uchastokId: uchastok.id,
           SntId: dto.SntId,
         },
       });
 
-      const uchastokDto: getUchastokDto = new getUchastokDto();
-      uchastokDto.uchastokId = dto.uchastokId;
+      const uchastokDto: getUchastokDto = new getUchastokDto(
+        dto.uchastokId,
+        dto.SntId,
+      );
       await this.debtService.calculateNewDebt(uchastokDto);
 
       return dublicatePayment;
@@ -136,8 +131,10 @@ export class PokazaniaService {
       await uchastok.$add('payments', [payment.id]);
       uchastok.payments.push(payment);
 
-      const uchastokDto: getUchastokDto = new getUchastokDto();
-      uchastokDto.uchastokId = dto.uchastokId;
+      const uchastokDto: getUchastokDto = new getUchastokDto(
+        dto.uchastokId,
+        dto.SntId,
+      );
       await this.debtService.calculateNewDebt(uchastokDto);
 
       return payment;

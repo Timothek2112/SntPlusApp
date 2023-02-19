@@ -9,8 +9,7 @@ export class CreatePaymentDto {
   uchastokId: number;
   readonly SntId: number;
 
-
-  constructor() {
+  zeros() {
     this.water = 0;
     this.electricity = 0;
     this.membership = 0;

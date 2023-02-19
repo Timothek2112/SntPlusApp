@@ -1,3 +1,3 @@
 export class sntDto {
-    title: string;
+  readonly title: string;
 }

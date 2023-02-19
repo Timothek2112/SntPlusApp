@@ -63,9 +63,6 @@ export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
   @BelongsTo(() => Uchastki)
   uchastok: Uchastki;
 
-  @BelongsTo(() => SNT)
-  SNT: SNT;
-
   @ForeignKey(() => SNT)
   @Column({ type: DataType.INTEGER })
   SntId: number;

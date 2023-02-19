@@ -3,9 +3,9 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { QueryTypes } from 'sequelize';
+import { Op, QueryTypes, Transaction } from 'sequelize';
 import { getUchastokDto } from 'src/getPass/dto/get-uchastok.dto';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
 import { Users } from 'src/getPass/models/user.model';
@@ -17,6 +17,7 @@ import { Debts } from './models/debts.model';
 import { Payment } from './models/payments.model';
 import { Pokazania } from './models/pokazania.model';
 import { Rates } from './models/rates.model';
+import { sign } from 'crypto';
 
 @Injectable()
 export class DebtService {
@@ -29,26 +30,22 @@ export class DebtService {
     @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
   ) {
     Pokazania.addHook('afterCreate', (pokazanie: Pokazania, options) => {
-      const dto = new getUchastokDto();
-      dto.uchastokId = pokazanie.uchastokId;
+      const dto = new getUchastokDto(pokazanie.uchastokId, pokazanie.SntId);
       this.calculateNewDebt(dto);
     });
 
     Pokazania.addHook('afterUpdate', (pokazanie: Pokazania, options) => {
-      const dto = new getUchastokDto();
-      dto.uchastokId = pokazanie.uchastokId;
+      const dto = new getUchastokDto(pokazanie.uchastokId, pokazanie.SntId);
       this.calculateNewDebt(dto);
     });
 
     Payment.addHook('afterUpdate', (payment: Payment, options) => {
-      const dto = new getUchastokDto();
-      dto.uchastokId = payment.uchastokId;
+      const dto = new getUchastokDto(payment.uchastokId, payment.SntId);
       this.calculateNewDebt(dto);
     });
 
     Payment.addHook('afterCreate', (payment: Payment, options) => {
-      const dto = new getUchastokDto();
-      dto.uchastokId = payment.uchastokId;
+      const dto = new getUchastokDto(payment.uchastokId, payment.SntId);
       this.calculateNewDebt(dto);
     });
   }
@@ -63,7 +60,9 @@ export class DebtService {
     });
 
     if (dublicatedRate) {
-      await this.ratesRepository.update(dto, { where: { month, year, SntId: dto.SntId } });
+      await this.ratesRepository.update(dto, {
+        where: { month, year, SntId: dto.SntId },
+      });
       return dublicatedRate;
     } else {
       rate = await this.ratesRepository.create(dto);
@@ -73,32 +72,35 @@ export class DebtService {
 
   async returnDebt(dto: getUchastokDto) {
     const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId, SntId: dto.SntId },
+      where: { id: dto.uchastokId, SntId: dto.SntId },
       include: { all: true },
     });
-    const debt = uchastok.debts[uchastok.debts.length - 1];
-    return debt;
+
+    return uchastok.debt;
   }
 
   //считает сколько пользователь должен на данный момент
   public async calculateNewDebt(dto: getUchastokDto) {
     const uchastok = await this.uchastkiRepository.findOne({
-      where: { uchastok: dto.uchastokId, SntId: dto.SntId },
+      where: { id: dto.uchastokId, SntId: dto.SntId },
       include: { all: true },
     });
 
     if (!uchastok) return { error: 'Участка не существует' };
 
     const payments = this.calculatePaymentSum(uchastok);
-    const calculatedDebt = await this.calculateDebt(uchastok.uchastok, uchastok.SntId);
+    const calculatedDebt = await this.calculateDebt(
+      uchastok.id,
+      uchastok.SntId,
+    );
 
-    if ('error' in calculatedDebt) return calculatedDebt;
+    if ('error' in calculatedDebt) return payments;
+    if (!('error' in payments)) calculatedDebt.applyPayment(payments);
 
-    calculatedDebt.applyPayment(payments);
+    if (uchastok.debt != null) await uchastok.debt.destroy();
 
     const newDebt = await this.debtRepository.create(calculatedDebt);
-    await uchastok.$add('debts', [newDebt.id]);
-    uchastok.debts.push(newDebt);
+    await uchastok.$set('debt', [newDebt.id]);
 
     return newDebt;
   }
@@ -107,6 +109,9 @@ export class DebtService {
   calculatePaymentSum(uchastok: Uchastki) {
     const payments = uchastok.payments;
     const sumPayment: CreatePaymentDto = new CreatePaymentDto();
+    sumPayment.zeros();
+
+    if (payments.length == 0) return { error: 'Нет ни одной оплаты' };
 
     for (let i = 0; i < payments.length; i++) {
       sumPayment.water += payments[i].water;
@@ -120,55 +125,81 @@ export class DebtService {
   }
 
   //считает весь долг пользователя
-  async calculateDebt(uchastok: number, SntId: number) {
+  async calculateDebt(uchastokId: number, SntId: number) {
     const pokazania = await this.pokazaniaRepository.findAll({
-      where: { uchastokId: uchastok, SntId: SntId },
+      where: { uchastokId: uchastokId, SntId: SntId },
       order: [
         ['year', 'ASC'],
         ['month', 'ASC'],
       ],
     });
+
+    if (pokazania.length == 0) return { error: 'Показаний нет' };
+
     const debt: DebtDto = new DebtDto();
-    let rate = await this.findRate(pokazania[0]);
+    let rate: Rates = await this.findRate(pokazania[0]);
+
     debt.water = pokazania[0].water * rate.water;
+    console.log(debt.water);
     debt.electricity = pokazania[0].electricity * rate.electricity;
     debt.membership = pokazania[0].membership;
     debt.target = pokazania[0].target;
     debt.penality = pokazania[0].penality;
+
     for (let i = 1; i < pokazania.length; i++) {
       rate = await this.findRate(pokazania[i]);
       const prevWater = pokazania[i - 1];
       const prevElectricity = pokazania[i - 1];
-      debt.water += (pokazania[i].water - prevWater.water) * rate.water;
-      debt.electricity +=
-        (pokazania[i].electricity - prevElectricity.electricity) *
-        rate.electricity;
+
+      // eslint-disable-next-line prettier/prettier
+      if (prevWater.water > pokazania[i].water) debt.water += pokazania[i].water * rate.water;
+      else debt.water += (pokazania[i].water - prevWater.water) * rate.water;
+
+      if (prevElectricity.electricity > pokazania[i].electricity)
+        debt.electricity += pokazania[i].electricity * rate.electricity;
+      else
+        debt.electricity +=
+          (pokazania[i].electricity - prevElectricity.electricity) *
+          rate.electricity;
+
       debt.membership += pokazania[i].membership;
       debt.target += pokazania[i].target;
       debt.penality += pokazania[i].penality;
     }
+
+    debt.SntId = SntId;
+    debt.uchastokId = uchastokId;
+
     return debt;
   }
 
   //Находит тариф, по которому следует считать переданное показание
   async findRate(userPokazania: Pokazania | Payment) {
-    const allRates = await this.ratesRepository.findAll({
-      where: { SntId: userPokazania.SntId },
-      order: [
-        ['year', 'ASC'],
-        ['month', 'ASC'],
-      ],
-    });
+    let foundRate = null;
 
-    for (let i = 0; i < allRates.length; i++) {
-      if (
-        userPokazania.year * 100 + userPokazania.month >=
-        allRates[i].year * 100 + allRates[i].month
-      ) {
-        return allRates[i];
-      }
-    }
-    return null;
+    await this.ratesRepository
+      .findAll({
+        where: {
+          SntId: userPokazania.SntId,
+        },
+        order: [
+          ['year', 'ASC'],
+          ['month', 'ASC'],
+        ],
+      })
+      .then((result) => {
+        result.forEach((rate) => {
+          if (
+            userPokazania.year * 100 + userPokazania.month >=
+            rate.year * 100 + rate.month
+          ) {
+            foundRate = rate;
+          }
+        });
+        return null;
+      });
+
+    return foundRate;
   }
 
   //Возвращает показания или оплаты за заданный период
@@ -190,7 +221,6 @@ export class DebtService {
           ['month', 'ASC'],
         ],
       });
-      console.log('Считаем показания');
     } else if (switchState == 'Payments') {
       req = await this.paymentsRepository.findAll({
         where: {
@@ -199,7 +229,6 @@ export class DebtService {
         },
         include: { all: true },
       });
-      console.log('Считаем оплаты');
     }
 
     userForPeriod = this.getForPeriod(
@@ -222,12 +251,15 @@ export class DebtService {
         year: unit.year,
       });
     }
+    console.log(result);
     return result;
   }
 
   //Возвращает ставки за период
   async getRatesForPeriod(dto: PeriodDto) {
-    const rates = await this.ratesRepository.findAll({ where: {SntId: dto.SntId }});
+    const rates = await this.ratesRepository.findAll({
+      where: { SntId: dto.SntId },
+    });
     return this.getForPeriod(
       dto.startPeriodM,
       dto.endPeriodM,
@@ -251,5 +283,102 @@ export class DebtService {
       }
     }
     return forPeriod;
+  }
+
+  async CalculateDebtForPeriod(dto: PeriodDto) {
+    const uchastok = await this.uchastkiRepository.findOne({
+      where: { id: dto.uchastokId, SntId: dto.SntId },
+      include: { all: true },
+    });
+
+    if (!uchastok)
+      throw new Error('Участка не существует  id = ' + dto.uchastokId);
+
+    const payments = await this.CalculatePaymentForPeriod(dto);
+    const calculatedDebt = await this.CalculatePokazaniaForPeriod(dto);
+
+    if ('error' in calculatedDebt) throw new Error('Нет показаний');
+    if (!('error' in payments)) calculatedDebt.applyPayment(payments);
+
+    return calculatedDebt;
+  }
+
+  async CalculatePokazaniaForPeriod(period: PeriodDto) {
+    const allPokazania = await this.pokazaniaRepository.findAll({
+      where: { uchastokId: period.uchastokId, SntId: period.SntId },
+      include: { all: true },
+    });
+
+    const pokazania = this.getForPeriod(
+      period.startPeriodM,
+      period.endPeriodM,
+      period.startPeriodY,
+      period.endPeriodY,
+      allPokazania,
+    );
+
+    if (pokazania.length == 0) return { error: 'Показаний нет' };
+
+    const debt: DebtDto = new DebtDto();
+    let rate: Rates = await this.findRate(pokazania[0]);
+
+    debt.water = pokazania[0].water * rate.water;
+    debt.electricity = pokazania[0].electricity * rate.electricity;
+    debt.membership = pokazania[0].membership;
+    debt.target = pokazania[0].target;
+    debt.penality = pokazania[0].penality;
+    for (let i = 1; i < pokazania.length; i++) {
+      rate = await this.findRate(pokazania[i]);
+      const prevWater = pokazania[i - 1];
+      const prevElectricity = pokazania[i - 1];
+
+      // eslint-disable-next-line prettier/prettier
+      if (prevWater.water > pokazania[i].water) debt.water += pokazania[i].water * rate.water;
+      else debt.water += (pokazania[i].water - prevWater.water) * rate.water;
+
+      if (prevElectricity.electricity > pokazania[i].electricity)
+        debt.electricity += pokazania[i].electricity * rate.electricity;
+      else
+        debt.electricity +=
+          (pokazania[i].electricity - prevElectricity.electricity) *
+          rate.electricity;
+
+      debt.membership += pokazania[i].membership;
+      debt.target += pokazania[i].target;
+      debt.penality += pokazania[i].penality;
+    }
+
+    debt.SntId = period.SntId;
+    debt.uchastokId = period.uchastokId;
+
+    return debt;
+  }
+
+  async CalculatePaymentForPeriod(period: PeriodDto) {
+    const allPayments = await this.paymentsRepository.findAll({
+      where: { uchastokId: period.uchastokId, SntId: period.SntId },
+      include: { all: true },
+    });
+    const payments = this.getForPeriod(
+      period.startPeriodM,
+      period.endPeriodM,
+      period.startPeriodY,
+      period.endPeriodY,
+      allPayments,
+    );
+    const sumPayment: CreatePaymentDto = new CreatePaymentDto();
+    sumPayment.zeros();
+
+    if (payments.length == 0) return { error: 'Нет ни одной оплаты' };
+
+    for (let i = 0; i < payments.length; i++) {
+      sumPayment.water += payments[i].water;
+      sumPayment.electricity += payments[i].electricity;
+      sumPayment.membership += payments[i].membership;
+      sumPayment.penality += payments[i].penality;
+      sumPayment.target += payments[i].target;
+    }
+
+    return sumPayment;
   }
 }

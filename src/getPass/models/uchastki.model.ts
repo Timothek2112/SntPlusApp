@@ -4,6 +4,7 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -20,7 +21,12 @@ export interface UchastokCreationAttrs {
 
 @Table({ tableName: 'uchastki' })
 export class Uchastki extends Model<Uchastki, UchastokCreationAttrs> {
-  @Column({ type: DataType.INTEGER, unique: true, primaryKey: true })
+  @Column({
+    type: DataType.INTEGER,
+    unique: true,
+    primaryKey: true,
+    autoIncrement: true,
+  })
   id: number;
 
   @Column({ type: DataType.INTEGER })
@@ -35,9 +41,6 @@ export class Uchastki extends Model<Uchastki, UchastokCreationAttrs> {
   @BelongsTo(() => Users)
   user: Users;
 
-  @BelongsTo(() => SNT)
-  SNT: SNT;
-
   @ForeignKey(() => SNT)
   @Column({ type: DataType.INTEGER })
   SntId: number;
@@ -45,8 +48,8 @@ export class Uchastki extends Model<Uchastki, UchastokCreationAttrs> {
   @HasMany(() => Pokazania)
   pokazania: Pokazania[];
 
-  @HasMany(() => Debts)
-  debts: Debts[];
+  @HasOne(() => Debts)
+  debt: Debts;
 
   @HasMany(() => Payment)
   payments: Payment[];
