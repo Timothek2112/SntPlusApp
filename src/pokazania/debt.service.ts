@@ -56,7 +56,7 @@ export class DebtService {
   }
 
   async setForFuture(pokazanie: Pokazania) {
-    const futurePokazania = this.pokazaniaRepository.sequelize.query(
+    const futurePokazania = await this.pokazaniaRepository.sequelize.query(
       `SELECT * FROM pokazania AS p WHERE ${pokazanie.year} * 100 + ${pokazanie.month} <= p.year * 100 + p.month ORDER BY p.year ASC, p.month ASC`,
       { type: QueryTypes.SELECT, model: Pokazania },
     );

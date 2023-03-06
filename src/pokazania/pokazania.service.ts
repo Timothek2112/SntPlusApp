@@ -43,8 +43,8 @@ export class PokazaniaService {
     // Обновлять показания можно только за тот же месяц и только в период между
     // 20 и 31 числом месяца
     if (
-      today.getMonth() + 1 == dto.month &&
-      today.getDate() >= 20 &&
+      //today.getMonth() + 1 == dto.month && Раскомментировать на релизе
+      today.getDate() >= 1 && // TODO: Поменять единицу на 20 на релизе
       today.getDate() <= 31 &&
       today.getFullYear() + '' == '20' + dto.year
     ) {
