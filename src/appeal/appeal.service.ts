@@ -36,6 +36,7 @@ export class AppealService {
     const appeals = await this.appealRepository.findAll({
       where: { userId: id },
       include: { all: true },
+      order: [['date', 'DESC']],
     });
     const result = [];
 

@@ -67,6 +67,9 @@ export class Users extends Model<Users, UserCreationAttrs> {
   @Column({ type: DataType.STRING, allowNull: false })
   surname: string;
 
+  @Column({ type: DataType.STRING })
+  pushToken: string;
+
   @HasMany(() => Uchastki)
   uchastki: Uchastki[];
 

@@ -16,6 +16,7 @@ import { GetUserDto } from '../getPass/dto/get-user.dto';
 import { AuthService } from './auth.service';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { SetPushToken } from './dto/setToken.dto';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -26,7 +27,7 @@ export class AuthController {
   @Post('/login')
   async login(@Body() userDto: CreateUserDto) {
     const TokenUser = await this.authService.login(userDto);
-    return { token: TokenUser[0], userid: TokenUser[1] };
+    return { token: TokenUser[0], userid: TokenUser[1], SntId: TokenUser[2] };
   }
 
   @Post('/registration')
@@ -49,5 +50,10 @@ export class AuthController {
   @Get('/usersUchastki/:id')
   getUsersUchastki(@Param('id') id: number){
     return this.authService.getUsersUchastki(id);
+  }
+
+  @Post('/SetPushToken')
+  SetPushToken(@Body() tokenDto: SetPushToken) {
+    this.authService.SetPushToken(tokenDto);
   }
 }

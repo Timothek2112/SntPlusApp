@@ -16,6 +16,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { Role } from 'src/roles/roles/models/roles.model';
 import { Uchastki } from 'src/getPass/models/uchastki.model';
+import { SetPushToken } from './dto/setToken.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,7 @@ export class AuthService {
     user = await this.validateUser(userDto);
     result.push(await this.generateToken(user));
     result.push(user.id);
+    result.push(user.SntId);
     return result;
     
   }
@@ -95,5 +97,11 @@ export class AuthService {
   public async getUsersUchastki(userId: number){
     const usersUchastki = await (await this.userRepository.findOne({where: {id: userId}, include:{all: true}}));
     return usersUchastki.uchastki;
+  }
+
+  public async SetPushToken(tokenDto: SetPushToken) {
+    try{
+    await this.userRepository.update({ pushToken: tokenDto.token }, { where: { id: tokenDto.userId }});
+    } catch (e){console.log(e)}
   }
 }

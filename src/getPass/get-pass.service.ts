@@ -94,4 +94,14 @@ export class GetPassService {
     await user.$add('uchastki', [uchastok.id]);
     return uchastok;
   }
+
+  async GetUchastokId(uchastok: number, sntId: number) {
+    return {
+      sntId: (
+        await this.uchastkiRepository.findOne({
+          where: { uchastok: uchastok, SntId: sntId },
+        })
+      ).id,
+    };
+  }
 }

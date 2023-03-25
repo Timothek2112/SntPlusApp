@@ -28,7 +28,7 @@ import { PatchUserDto } from 'src/auth/dto/patch-user.dto';
 @Controller('/get-pass')
 export class GetPassController {
   constructor(private getPassService: GetPassService) {}
-  
+
   @ApiOperation({ summary: 'Создание пользователя' })
   @ApiResponse({ status: 201, type: Users })
   @Post()
@@ -65,5 +65,13 @@ export class GetPassController {
     @Param('id') id: number,
   ) {
     return await this.getPassService.patchUser(patchuserDto, id);
+  }
+
+  @Get('/uchastokId/:uchastok/:sntId')
+  async GetUchastokId(
+    @Param('uchastok') uchastok: number,
+    @Param('sntId') sntId: number,
+  ) {
+    return await this.getPassService.GetUchastokId(uchastok, sntId);
   }
 }

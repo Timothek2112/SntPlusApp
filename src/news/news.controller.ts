@@ -20,8 +20,9 @@ export class NewsController {
         return this.newsService.createNews(dto);
     }
 
-    @Get('/first/:number')
-    async getFirstNews(@Param('number') number: number){
-        return this.newsService.getFirstNews(number);   
+    @Get('/first/:number/:sntId')
+    async getFirstNews(@Param('number') number: number,
+                        @Param('sntId') sntId: number){
+        return this.newsService.getFirstNews(number, sntId);   
     }
  }

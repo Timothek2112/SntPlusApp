@@ -1,0 +1,1600 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>app documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">app documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li >DebtService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/pokazania/debt.service.ts</code>
+        </p>
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#calculateDebt" >calculateDebt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#CalculateDebtForPeriod" >CalculateDebtForPeriod</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#calculateNewDebt" >calculateNewDebt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#CalculatePaymentForPeriod" >CalculatePaymentForPeriod</a>
+                            </li>
+                            <li>
+                                <a href="#calculatePaymentSum" >calculatePaymentSum</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#CalculatePokazaniaForPeriod" >CalculatePokazaniaForPeriod</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createRate" >createRate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findRate" >findRate</a>
+                            </li>
+                            <li>
+                                <a href="#getForPeriod" >getForPeriod</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getRatesForPeriod" >getRatesForPeriod</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#returnDebt" >returnDebt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#returnForPeriod" >returnForPeriod</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(ratesRepository, userRepository, debtRepository, pokazaniaRepository, paymentsRepository, uchastkiRepository)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/pokazania/debt.service.ts:23</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>ratesRepository</td>
+                                                  
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userRepository</td>
+                                                  
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>debtRepository</td>
+                                                  
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>pokazaniaRepository</td>
+                                                  
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>paymentsRepository</td>
+                                                  
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>uchastkiRepository</td>
+                                                  
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateDebt"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>calculateDebt</b></span>
+                        <a href="#calculateDebt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculateDebt(uchastokId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, SntId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="128"
+                            class="link-to-prism">src/pokazania/debt.service.ts:128</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uchastokId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>SntId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CalculateDebtForPeriod"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>CalculateDebtForPeriod</b></span>
+                        <a href="#CalculateDebtForPeriod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>CalculateDebtForPeriod(dto: <a href="../classes/PeriodDto.html" target="_self">PeriodDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="288"
+                            class="link-to-prism">src/pokazania/debt.service.ts:288</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dto</td>
+                                    <td>
+                                                <code><a href="../classes/PeriodDto.html" target="_self" >PeriodDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateNewDebt"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>calculateNewDebt</b></span>
+                        <a href="#calculateNewDebt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculateNewDebt(dto: <a href="../classes/getUchastokDto.html" target="_self">getUchastokDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">src/pokazania/debt.service.ts:83</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dto</td>
+                                    <td>
+                                                <code><a href="../classes/getUchastokDto.html" target="_self" >getUchastokDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CalculatePaymentForPeriod"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>CalculatePaymentForPeriod</b></span>
+                        <a href="#CalculatePaymentForPeriod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>CalculatePaymentForPeriod(period: <a href="../classes/PeriodDto.html" target="_self">PeriodDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="357"
+                            class="link-to-prism">src/pokazania/debt.service.ts:357</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>period</td>
+                                    <td>
+                                                <code><a href="../classes/PeriodDto.html" target="_self" >PeriodDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculatePaymentSum"></a>
+                    <span class="name">
+                        <span ><b>calculatePaymentSum</b></span>
+                        <a href="#calculatePaymentSum"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>calculatePaymentSum(uchastok: <a href="../classes/Uchastki.html" target="_self">Uchastki</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="109"
+                            class="link-to-prism">src/pokazania/debt.service.ts:109</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>uchastok</td>
+                                    <td>
+                                                <code><a href="../classes/Uchastki.html" target="_self" >Uchastki</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CalculatePokazaniaForPeriod"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>CalculatePokazaniaForPeriod</b></span>
+                        <a href="#CalculatePokazaniaForPeriod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>CalculatePokazaniaForPeriod(period: <a href="../classes/PeriodDto.html" target="_self">PeriodDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="306"
+                            class="link-to-prism">src/pokazania/debt.service.ts:306</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>period</td>
+                                    <td>
+                                                <code><a href="../classes/PeriodDto.html" target="_self" >PeriodDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createRate"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>createRate</b></span>
+                        <a href="#createRate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createRate(dto: <a href="../classes/CreateRateDto.html" target="_self">CreateRateDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="53"
+                            class="link-to-prism">src/pokazania/debt.service.ts:53</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dto</td>
+                                    <td>
+                                                <code><a href="../classes/CreateRateDto.html" target="_self" >CreateRateDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findRate"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>findRate</b></span>
+                        <a href="#findRate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findRate(userPokazania: Pokazania | Payment)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="177"
+                            class="link-to-prism">src/pokazania/debt.service.ts:177</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userPokazania</td>
+                                    <td>
+                                            <code>Pokazania | Payment</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getForPeriod"></a>
+                    <span class="name">
+                        <span ><b>getForPeriod</b></span>
+                        <a href="#getForPeriod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getForPeriod(startPeriodM, endPeriodM, startPeriodY, endPeriodY, req)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="273"
+                            class="link-to-prism">src/pokazania/debt.service.ts:273</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>startPeriodM</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>endPeriodM</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>startPeriodY</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>endPeriodY</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>req</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getRatesForPeriod"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>getRatesForPeriod</b></span>
+                        <a href="#getRatesForPeriod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getRatesForPeriod(dto: <a href="../classes/PeriodDto.html" target="_self">PeriodDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="259"
+                            class="link-to-prism">src/pokazania/debt.service.ts:259</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dto</td>
+                                    <td>
+                                                <code><a href="../classes/PeriodDto.html" target="_self" >PeriodDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="returnDebt"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>returnDebt</b></span>
+                        <a href="#returnDebt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>returnDebt(dto: <a href="../classes/getUchastokDto.html" target="_self">getUchastokDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">src/pokazania/debt.service.ts:73</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dto</td>
+                                    <td>
+                                                <code><a href="../classes/getUchastokDto.html" target="_self" >getUchastokDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="returnForPeriod"></a>
+                    <span class="name">
+                        <span class="modifier">Async</span>
+                        <span ><b>returnForPeriod</b></span>
+                        <a href="#returnForPeriod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>returnForPeriod(dto: <a href="../classes/PeriodDto.html" target="_self">PeriodDto</a>, switchState: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="206"
+                            class="link-to-prism">src/pokazania/debt.service.ts:206</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dto</td>
+                                    <td>
+                                                <code><a href="../classes/PeriodDto.html" target="_self" >PeriodDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>switchState</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpException, Injectable } from &#x27;@nestjs/common&#x27;;
+import { InjectModel } from &#x27;@nestjs/sequelize&#x27;;
+import { Op, QueryTypes, Transaction } from &#x27;sequelize&#x27;;
+import { getUchastokDto } from &#x27;src/getPass/dto/get-uchastok.dto&#x27;;
+import { Uchastki } from &#x27;src/getPass/models/uchastki.model&#x27;;
+import { Users } from &#x27;src/getPass/models/user.model&#x27;;
+import { DebtDto } from &#x27;./dto/create-debt.dto&#x27;;
+import { CreatePaymentDto } from &#x27;./dto/create-payment.dto&#x27;;
+import { CreateRateDto } from &#x27;./dto/create-rate.dto&#x27;;
+import { PeriodDto } from &#x27;./dto/period.dto&#x27;;
+import { Debts } from &#x27;./models/debts.model&#x27;;
+import { Payment } from &#x27;./models/payments.model&#x27;;
+import { Pokazania } from &#x27;./models/pokazania.model&#x27;;
+import { Rates } from &#x27;./models/rates.model&#x27;;
+import { sign } from &#x27;crypto&#x27;;
+
+@Injectable()
+export class DebtService {
+  constructor(
+    @InjectModel(Rates) private ratesRepository: typeof Rates,
+    @InjectModel(Users) private userRepository: typeof Users,
+    @InjectModel(Debts) private debtRepository: typeof Debts,
+    @InjectModel(Pokazania) private pokazaniaRepository: typeof Pokazania,
+    @InjectModel(Payment) private paymentsRepository: typeof Payment,
+    @InjectModel(Uchastki) private uchastkiRepository: typeof Uchastki,
+  ) {
+    Pokazania.addHook(&#x27;afterCreate&#x27;, (pokazanie: Pokazania, options) &#x3D;&gt; {
+      const dto &#x3D; new getUchastokDto(pokazanie.uchastokId, pokazanie.SntId);
+      this.calculateNewDebt(dto);
+    });
+
+    Pokazania.addHook(&#x27;afterUpdate&#x27;, (pokazanie: Pokazania, options) &#x3D;&gt; {
+      const dto &#x3D; new getUchastokDto(pokazanie.uchastokId, pokazanie.SntId);
+      this.calculateNewDebt(dto);
+    });
+
+    Payment.addHook(&#x27;afterUpdate&#x27;, (payment: Payment, options) &#x3D;&gt; {
+      const dto &#x3D; new getUchastokDto(payment.uchastokId, payment.SntId);
+      this.calculateNewDebt(dto);
+    });
+
+    Payment.addHook(&#x27;afterCreate&#x27;, (payment: Payment, options) &#x3D;&gt; {
+      const dto &#x3D; new getUchastokDto(payment.uchastokId, payment.SntId);
+      this.calculateNewDebt(dto);
+    });
+  }
+
+  async createRate(dto: CreateRateDto) {
+    let rate &#x3D; null;
+    const month &#x3D; dto.month;
+    const year &#x3D; dto.year;
+    const dublicatedRate &#x3D; await this.ratesRepository.findOne({
+      where: { month: month, year: year, SntId: dto.SntId },
+      include: { all: true },
+    });
+
+    if (dublicatedRate) {
+      await this.ratesRepository.update(dto, {
+        where: { month, year, SntId: dto.SntId },
+      });
+      return dublicatedRate;
+    } else {
+      rate &#x3D; await this.ratesRepository.create(dto);
+      return rate;
+    }
+  }
+
+  async returnDebt(dto: getUchastokDto) {
+    const uchastok &#x3D; await this.uchastkiRepository.findOne({
+      where: { id: dto.uchastokId, SntId: dto.SntId },
+      include: { all: true },
+    });
+
+    return uchastok.debt;
+  }
+
+  //считает сколько пользователь должен на данный момент
+  public async calculateNewDebt(dto: getUchastokDto) {
+    const uchastok &#x3D; await this.uchastkiRepository.findOne({
+      where: { id: dto.uchastokId, SntId: dto.SntId },
+      include: { all: true },
+    });
+
+    if (!uchastok) return { error: &#x27;Участка не существует&#x27; };
+
+    const payments &#x3D; this.calculatePaymentSum(uchastok);
+    const calculatedDebt &#x3D; await this.calculateDebt(
+      uchastok.id,
+      uchastok.SntId,
+    );
+
+    if (&#x27;error&#x27; in calculatedDebt) return payments;
+    if (!(&#x27;error&#x27; in payments)) calculatedDebt.applyPayment(payments);
+
+    if (uchastok.debt !&#x3D; null) await uchastok.debt.destroy();
+
+    const newDebt &#x3D; await this.debtRepository.create(calculatedDebt);
+    await uchastok.$set(&#x27;debt&#x27;, [newDebt.id]);
+
+    return newDebt;
+  }
+
+  //считает всю сумму оплаченную пользователем
+  calculatePaymentSum(uchastok: Uchastki) {
+    const payments &#x3D; uchastok.payments;
+    const sumPayment: CreatePaymentDto &#x3D; new CreatePaymentDto();
+    sumPayment.zeros();
+
+    if (payments.length &#x3D;&#x3D; 0) return { error: &#x27;Нет ни одной оплаты&#x27; };
+
+    for (let i &#x3D; 0; i &lt; payments.length; i++) {
+      sumPayment.water +&#x3D; payments[i].water;
+      sumPayment.electricity +&#x3D; payments[i].electricity;
+      sumPayment.membership +&#x3D; payments[i].membership;
+      sumPayment.penality +&#x3D; payments[i].penality;
+      sumPayment.target +&#x3D; payments[i].target;
+    }
+
+    return sumPayment;
+  }
+
+  //считает весь долг пользователя
+  async calculateDebt(uchastokId: number, SntId: number) {
+    const pokazania &#x3D; await this.pokazaniaRepository.findAll({
+      where: { uchastokId: uchastokId, SntId: SntId },
+      order: [
+        [&#x27;year&#x27;, &#x27;ASC&#x27;],
+        [&#x27;month&#x27;, &#x27;ASC&#x27;],
+      ],
+    });
+
+    if (pokazania.length &#x3D;&#x3D; 0) return { error: &#x27;Показаний нет&#x27; };
+
+    const debt: DebtDto &#x3D; new DebtDto();
+    let rate: Rates &#x3D; await this.findRate(pokazania[0]);
+
+    debt.water &#x3D; pokazania[0].water * rate.water;
+    console.log(debt.water);
+    debt.electricity &#x3D; pokazania[0].electricity * rate.electricity;
+    debt.membership &#x3D; pokazania[0].membership;
+    debt.target &#x3D; pokazania[0].target;
+    debt.penality &#x3D; pokazania[0].penality;
+
+    for (let i &#x3D; 1; i &lt; pokazania.length; i++) {
+      rate &#x3D; await this.findRate(pokazania[i]);
+      const prevWater &#x3D; pokazania[i - 1];
+      const prevElectricity &#x3D; pokazania[i - 1];
+
+      // eslint-disable-next-line prettier/prettier
+      if (prevWater.water &gt; pokazania[i].water) debt.water +&#x3D; pokazania[i].water * rate.water;
+      else debt.water +&#x3D; (pokazania[i].water - prevWater.water) * rate.water;
+
+      if (prevElectricity.electricity &gt; pokazania[i].electricity)
+        debt.electricity +&#x3D; pokazania[i].electricity * rate.electricity;
+      else
+        debt.electricity +&#x3D;
+          (pokazania[i].electricity - prevElectricity.electricity) *
+          rate.electricity;
+
+      debt.membership +&#x3D; pokazania[i].membership;
+      debt.target +&#x3D; pokazania[i].target;
+      debt.penality +&#x3D; pokazania[i].penality;
+    }
+
+    debt.SntId &#x3D; SntId;
+    debt.uchastokId &#x3D; uchastokId;
+
+    return debt;
+  }
+
+  //Находит тариф, по которому следует считать переданное показание
+  async findRate(userPokazania: Pokazania | Payment) {
+    let foundRate &#x3D; null;
+
+    await this.ratesRepository
+      .findAll({
+        where: {
+          SntId: userPokazania.SntId,
+        },
+        order: [
+          [&#x27;year&#x27;, &#x27;ASC&#x27;],
+          [&#x27;month&#x27;, &#x27;ASC&#x27;],
+        ],
+      })
+      .then((result) &#x3D;&gt; {
+        result.forEach((rate) &#x3D;&gt; {
+          if (
+            userPokazania.year * 100 + userPokazania.month &gt;&#x3D;
+            rate.year * 100 + rate.month
+          ) {
+            foundRate &#x3D; rate;
+          }
+        });
+        return null;
+      });
+
+    return foundRate;
+  }
+
+  //Возвращает показания или оплаты за заданный период
+  async returnForPeriod(dto: PeriodDto, switchState: string) {
+    let req;
+    let userForPeriod &#x3D; [];
+
+    const result &#x3D; [];
+
+    if (switchState &#x3D;&#x3D; &#x27;Pokazania&#x27;) {
+      req &#x3D; await this.pokazaniaRepository.findAll({
+        where: {
+          uchastokId: dto.uchastokId,
+          SntId: dto.SntId,
+        },
+        include: { all: true },
+        order: [
+          [&#x27;year&#x27;, &#x27;ASC&#x27;],
+          [&#x27;month&#x27;, &#x27;ASC&#x27;],
+        ],
+      });
+    } else if (switchState &#x3D;&#x3D; &#x27;Payments&#x27;) {
+      req &#x3D; await this.paymentsRepository.findAll({
+        where: {
+          uchastokId: dto.uchastokId,
+          SntId: dto.SntId,
+        },
+        include: { all: true },
+      });
+    }
+
+    userForPeriod &#x3D; this.getForPeriod(
+      dto.startPeriodM,
+      dto.endPeriodM,
+      dto.startPeriodY,
+      dto.endPeriodY,
+      req,
+    );
+
+    for (let i &#x3D; 0; i &lt; userForPeriod.length; i++) {
+      const unit &#x3D; userForPeriod[i];
+      result.push({
+        water: unit.water,
+        electricity: unit.electricity,
+        penality: unit.penality,
+        membership: unit.membership,
+        target: unit.target,
+        month: unit.month,
+        year: unit.year,
+      });
+    }
+    console.log(result);
+    return result;
+  }
+
+  //Возвращает ставки за период
+  async getRatesForPeriod(dto: PeriodDto) {
+    const rates &#x3D; await this.ratesRepository.findAll({
+      where: { SntId: dto.SntId },
+    });
+    return this.getForPeriod(
+      dto.startPeriodM,
+      dto.endPeriodM,
+      dto.startPeriodY,
+      dto.endPeriodY,
+      rates,
+    );
+  }
+
+  //Возвращает записи переданного массива за заданный период
+  getForPeriod(startPeriodM, endPeriodM, startPeriodY, endPeriodY, req) {
+    const forPeriod &#x3D; [];
+    for (let i &#x3D; 0; i &lt; req.length; i++) {
+      if (
+        startPeriodY * 100 + startPeriodM &lt;&#x3D;
+        req[i].year * 100 + req[i].month
+      ) {
+        if (endPeriodY * 100 + endPeriodM &gt;&#x3D; req[i].year * 100 + req[i].month) {
+          forPeriod.push(req[i]);
+        }
+      }
+    }
+    return forPeriod;
+  }
+
+  async CalculateDebtForPeriod(dto: PeriodDto) {
+    const uchastok &#x3D; await this.uchastkiRepository.findOne({
+      where: { id: dto.uchastokId, SntId: dto.SntId },
+      include: { all: true },
+    });
+
+    if (!uchastok)
+      throw new Error(&#x27;Участка не существует  id &#x3D; &#x27; + dto.uchastokId);
+
+    const payments &#x3D; await this.CalculatePaymentForPeriod(dto);
+    const calculatedDebt &#x3D; await this.CalculatePokazaniaForPeriod(dto);
+
+    if (&#x27;error&#x27; in calculatedDebt) throw new Error(&#x27;Нет показаний&#x27;);
+    if (!(&#x27;error&#x27; in payments)) calculatedDebt.applyPayment(payments);
+
+    return calculatedDebt;
+  }
+
+  async CalculatePokazaniaForPeriod(period: PeriodDto) {
+    const allPokazania &#x3D; await this.pokazaniaRepository.findAll({
+      where: { uchastokId: period.uchastokId, SntId: period.SntId },
+      include: { all: true },
+    });
+
+    const pokazania &#x3D; this.getForPeriod(
+      period.startPeriodM,
+      period.endPeriodM,
+      period.startPeriodY,
+      period.endPeriodY,
+      allPokazania,
+    );
+
+    if (pokazania.length &#x3D;&#x3D; 0) return { error: &#x27;Показаний нет&#x27; };
+
+    const debt: DebtDto &#x3D; new DebtDto();
+    let rate: Rates &#x3D; await this.findRate(pokazania[0]);
+
+    debt.water &#x3D; pokazania[0].water * rate.water;
+    debt.electricity &#x3D; pokazania[0].electricity * rate.electricity;
+    debt.membership &#x3D; pokazania[0].membership;
+    debt.target &#x3D; pokazania[0].target;
+    debt.penality &#x3D; pokazania[0].penality;
+    for (let i &#x3D; 1; i &lt; pokazania.length; i++) {
+      rate &#x3D; await this.findRate(pokazania[i]);
+      const prevWater &#x3D; pokazania[i - 1];
+      const prevElectricity &#x3D; pokazania[i - 1];
+
+      // eslint-disable-next-line prettier/prettier
+      if (prevWater.water &gt; pokazania[i].water) debt.water +&#x3D; pokazania[i].water * rate.water;
+      else debt.water +&#x3D; (pokazania[i].water - prevWater.water) * rate.water;
+
+      if (prevElectricity.electricity &gt; pokazania[i].electricity)
+        debt.electricity +&#x3D; pokazania[i].electricity * rate.electricity;
+      else
+        debt.electricity +&#x3D;
+          (pokazania[i].electricity - prevElectricity.electricity) *
+          rate.electricity;
+
+      debt.membership +&#x3D; pokazania[i].membership;
+      debt.target +&#x3D; pokazania[i].target;
+      debt.penality +&#x3D; pokazania[i].penality;
+    }
+
+    debt.SntId &#x3D; period.SntId;
+    debt.uchastokId &#x3D; period.uchastokId;
+
+    return debt;
+  }
+
+  async CalculatePaymentForPeriod(period: PeriodDto) {
+    const allPayments &#x3D; await this.paymentsRepository.findAll({
+      where: { uchastokId: period.uchastokId, SntId: period.SntId },
+      include: { all: true },
+    });
+    const payments &#x3D; this.getForPeriod(
+      period.startPeriodM,
+      period.endPeriodM,
+      period.startPeriodY,
+      period.endPeriodY,
+      allPayments,
+    );
+    const sumPayment: CreatePaymentDto &#x3D; new CreatePaymentDto();
+    sumPayment.zeros();
+
+    if (payments.length &#x3D;&#x3D; 0) return { error: &#x27;Нет ни одной оплаты&#x27; };
+
+    for (let i &#x3D; 0; i &lt; payments.length; i++) {
+      sumPayment.water +&#x3D; payments[i].water;
+      sumPayment.electricity +&#x3D; payments[i].electricity;
+      sumPayment.membership +&#x3D; payments[i].membership;
+      sumPayment.penality +&#x3D; payments[i].penality;
+      sumPayment.target +&#x3D; payments[i].target;
+    }
+
+    return sumPayment;
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'DebtService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
