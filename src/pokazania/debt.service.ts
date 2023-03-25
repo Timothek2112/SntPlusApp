@@ -140,7 +140,6 @@ export class DebtService {
     let rate: Rates = await this.findRate(pokazania[0]);
 
     debt.water = pokazania[0].water * rate.water;
-    console.log(debt.water);
     debt.electricity = pokazania[0].electricity * rate.electricity;
     debt.membership = pokazania[0].membership;
     debt.target = pokazania[0].target;
@@ -251,7 +250,6 @@ export class DebtService {
         year: unit.year,
       });
     }
-    console.log(result);
     return result;
   }
 
