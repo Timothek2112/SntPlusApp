@@ -24,7 +24,7 @@ interface PokazaniaCreationAttr {
   month: number;
 }
 
-@Table({ tableName: 'pokazania' })
+@Table({ tableName: 'Pokazania' })
 export class Pokazania extends Model<Pokazania, PokazaniaCreationAttr> {
   @Column({
     type: DataType.INTEGER,

@@ -9,7 +9,7 @@ import {
 import { Role } from '../../roles/roles/models/roles.model';
 import { Users } from './user.model';
 
-@Table({ tableName: 'user_roles', createdAt: false, updatedAt: false })
+@Table({ tableName: 'UserRoles', createdAt: false, updatedAt: false })
 export class UserRoles extends Model<UserRoles> {
   @ApiProperty({
     description: 'Присваевается автоматически, уникальный идентификатор роли',

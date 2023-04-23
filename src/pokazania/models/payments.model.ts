@@ -23,7 +23,7 @@ interface PaymentCreationAttrs {
   year: number;
 }
 
-@Table({ tableName: 'payments' })
+@Table({ tableName: 'Payments' })
 export class Payment extends Model<Payment, PaymentCreationAttrs> {
   @Column({
     type: DataType.INTEGER,

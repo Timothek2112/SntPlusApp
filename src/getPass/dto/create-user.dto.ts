@@ -15,11 +15,5 @@ export class CreateUserDto {
     description: 'Фамилия владельца аккаунта',
   })
   readonly surname?: string;
-  @ApiProperty({
-    example: '56',
-    description: 'Номер участка владельца аккаунта',
-  })
-  readonly uchastok?: number;
-
   readonly SntId: number;
 }

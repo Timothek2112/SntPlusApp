@@ -25,7 +25,7 @@ interface UserCreationAttrs {
   uchastok: number;
 }
 
-@Table({ tableName: 'users' })
+@Table({ tableName: 'Users' })
 export class Users extends Model<Users, UserCreationAttrs> {
   @ApiProperty({
     description:

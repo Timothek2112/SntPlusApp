@@ -15,7 +15,7 @@ interface RatesCreationAttrs {
   year: number;
 }
 
-@Table({ tableName: 'rates' })
+@Table({ tableName: 'Rates' })
 export class Rates extends Model<Rates, RatesCreationAttrs> {
   @Column({ type: DataType.FLOAT })
   water: number;

@@ -40,12 +40,12 @@ import { Rates } from './pokazania/models/rates.model';
     }),
     ScheduleModule.forRoot(),
     SequelizeModule.forRoot({
-      dialect: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: Number(process.env.POSTGRES_PORT),
-      username: process.env.POSTGRES_USER,
-      password: String(process.env.POSTGRES_PASSWORD),
-      database: process.env.POSTGRES_DB,
+      dialect: 'mysql',
+      host: process.env.MYSQL_HOST,
+      port: Number(process.env.MYSQL_PORT),
+      username: process.env.MYSQL_USER,
+      password: String(process.env.MYSQL_PASSWORD),
+      database: process.env.MYSQL_DB,
       models: [
         Rates,
         SNT,

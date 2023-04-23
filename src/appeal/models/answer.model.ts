@@ -15,7 +15,7 @@ export class AnswerCreationArgs {
   appealId: number;
 }
 
-@Table({ tableName: 'answer' })
+@Table({ tableName: 'Answers' })
 export class answer extends Model<answer, AnswerCreationArgs> {
   @Column({
     type: DataType.INTEGER,

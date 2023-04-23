@@ -19,7 +19,7 @@ export interface UchastokCreationAttrs {
   userId: number;
 }
 
-@Table({ tableName: 'uchastki' })
+@Table({ tableName: 'Sites' })
 export class Uchastki extends Model<Uchastki, UchastokCreationAttrs> {
   @Column({
     type: DataType.INTEGER,

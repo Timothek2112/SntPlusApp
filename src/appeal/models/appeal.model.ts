@@ -19,7 +19,7 @@ export class AppealCreationArgs {
   sntId: number;
 }
 
-@Table({ tableName: 'appeal' })
+@Table({ tableName: 'Appeals' })
 export class appeal extends Model<appeal, AppealCreationArgs> {
   @Column({
     type: DataType.INTEGER,

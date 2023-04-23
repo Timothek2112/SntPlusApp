@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { RolesService } from '../roles/roles/roles.service';
 import { Users } from './models/user.model';
@@ -19,9 +19,12 @@ export class GetPassService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
+    if(dto.SntId == null)
+      throw new HttpException('not found Snt id', 400);
     const user = await this.userRepository.create(dto);
     const role = await this.roleService.getRole('USER');
     await user.$set('role', [role.id]);
+    user.SntId = dto.SntId;
     return user;
   }
 

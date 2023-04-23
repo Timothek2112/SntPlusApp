@@ -18,7 +18,7 @@ interface DebtCreationAttrs {
   target: number;
 }
 
-@Table({ tableName: 'debts' })
+@Table({ tableName: 'Debts' })
 export class Debts extends Model<Debts, DebtCreationAttrs> {
   @Column({
     type: DataType.INTEGER,

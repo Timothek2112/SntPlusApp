@@ -12,7 +12,7 @@ export interface SntCreationArgs {
   title: string;
 }
 
-@Table({ tableName: 'snts' })
+@Table({ tableName: 'Snts' })
 export class SNT extends Model<SNT, SntCreationArgs> {
   @Column({
     type: DataType.INTEGER,
